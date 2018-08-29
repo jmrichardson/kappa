@@ -1,0 +1,19 @@
+filebeat.inputs:
+- type: log
+  paths:
+    # Log location inside filebeat container
+    - "/var/log/kappa/*.log"
+  tags: ["kappa-news"]
+  json.message_key: log
+  pipeline: "filebeat"
+  
+# Using custom template to set date format for json.asctime field (fields.yml doesn't work)
+setup.template.enabled: true
+setup.template.fields: "fields.yml"
+setup.template.overwrite: true
+
+output.elasticsearch: 
+  hosts: ["http://elasticsearch:9200"]
+
+setup.kibana:
+  host: "kibana:5601"

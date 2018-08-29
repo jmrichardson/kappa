@@ -1,0 +1,57 @@
+---
+version: '3.3'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
+    deploy:
+      mode: global
+      endpoint_mode: dnsrr
+    environment:
+      - cluster.name=kappa
+      - network.host=0.0.0.0
+      - discovery.zen.ping.unicast.hosts=elasticsearch
+      - discovery.zen.minimum_master_nodes=1
+    ports:
+      - target: 9200
+        published: 9200
+        mode: host
+      - target: 9300
+        published: 9300
+        mode: host
+    volumes:
+      - esdata:/var/lib/elasticsearch
+    networks:
+      - esnet
+
+  kibana:
+    build: ./config/kibana/Dockerfile
+    image: "docker.elastic.co/kibana/kibana:6.4.0"
+    deploy:
+      mode: global
+    ports:
+      - '5601:5601'
+    networks:
+      - esnet
+
+  # filebeat:
+    # container_name: filebeat
+    # hostname: filebeat
+    # user: root
+    # image: "docker.elastic.co/beats/filebeat:6.4.0"
+    # volumes:
+      # - ./config/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      # - ./config/filebeat/fields.yml:/usr/share/filebeat/fields.yml
+      # # Temporarily get news logs
+      # - ../packages/kappa_news/logs/:/var/log/kappa/
+      # - fbdata:/usr/share/filebeat/data/
+    # command: filebeat -e -strict.perms=false
+
+volumes:
+  esdata:
+    driver: local
+  fbdata:
+    driver: local
+
+networks:
+  esnet:
+    driver: overlay

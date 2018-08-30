@@ -1,11 +1,12 @@
 {
-  "description" : "...",
+  "description" : "Filebeat pipeline",
   "processors" : [
     {
       "date" : {
         "field" : "json.asctime",
         "target_field" : "json.asctime",
-        "formats" : ["yyyy/MM/dd hh:mm:ss,SSS"]
+        "formats" : ["yyyy-MM-dd HH:mm:ss,SSS"],
+        "timezone": "America/New_York"
       }
     }
   ]

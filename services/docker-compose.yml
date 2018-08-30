@@ -48,6 +48,8 @@ services:
       # Temporarily get news logs
       - /home/kappa/packages/kappa_news/logs/:/var/log/kappa/
       - fbdata:/usr/share/filebeat/data/
+    depends_on:
+      - elasticsearch
     command: filebeat -e -strict.perms=false
 
 

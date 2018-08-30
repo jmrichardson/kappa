@@ -29,7 +29,7 @@ docker-compose up -d elasticsearch
 docker-compose up -d kibana
 
 # Start filebeat service
-port 9200 20
+port 9200 60
 if [ $? -ne 0 ]; then
   echo "Error: ES cluster is not online"
   exit 1

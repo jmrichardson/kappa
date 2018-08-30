@@ -10,7 +10,7 @@ port() {
       echo Waiting for locahost:$port: $i of $seconds
       state=1
       let i=i+1 
-      sleep 1
+      sleep 10
     else
       state=0
       break 
@@ -29,7 +29,7 @@ docker-compose up -d elasticsearch
 docker-compose up -d kibana
 
 # Start filebeat service
-port 9200 60
+port 9200 10
 if [ $? -ne 0 ]; then
   echo "Error: ES cluster is not online"
   exit 1

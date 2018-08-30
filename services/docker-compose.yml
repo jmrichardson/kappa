@@ -4,11 +4,12 @@ services:
   elasticsearch:
     container_name: elasticsearch
     hostname: elasticsearch
-    image: "docker.elastic.co/elasticsearch/elasticsearch:${esver}"
+    image: "docker.elastic.co/elasticsearch/elasticsearch:${es_ver}"
+    network_mode: "host"
     environment:
       - cluster.name=kappa
       - network.host=0.0.0.0
-      - discovery.zen.ping.unicast.hosts=${eshosts}
+      - discovery.zen.ping.unicast.hosts=${es_master}
       - discovery.zen.minimum_master_nodes=1
       - bootstrap.memory_lock=true
     ulimits:
@@ -20,7 +21,6 @@ services:
     ports: 
       - '9200:9200'
       - '9300:9300'
-
 
   # kibana:
     # container_name: kibana

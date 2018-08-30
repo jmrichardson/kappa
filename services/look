@@ -1,0 +1,260 @@
+[
+    {
+        "Id": "e49e115dadf2df701abbdc4a97b930a94902a342f2a5869e5922815fe1d97369",
+        "Created": "2018-08-30T02:57:27.26893161Z",
+        "Path": "/usr/local/bin/docker-entrypoint.sh",
+        "Args": [
+            "eswrapper"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 23790,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2018-08-30T02:57:27.471843369Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:1ac6765457316224b41e3663704f904473d5480f68eb20c983d91fa014205f9e",
+        "ResolvConfPath": "/var/lib/docker/containers/e49e115dadf2df701abbdc4a97b930a94902a342f2a5869e5922815fe1d97369/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/e49e115dadf2df701abbdc4a97b930a94902a342f2a5869e5922815fe1d97369/hostname",
+        "HostsPath": "/var/lib/docker/containers/e49e115dadf2df701abbdc4a97b930a94902a342f2a5869e5922815fe1d97369/hosts",
+        "LogPath": "/var/lib/docker/containers/e49e115dadf2df701abbdc4a97b930a94902a342f2a5869e5922815fe1d97369/e49e115dadf2df701abbdc4a97b930a94902a342f2a5869e5922815fe1d97369-json.log",
+        "Name": "/elasticsearch",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "services_esdata:/usr/share/elasticsearch/data:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "host",
+            "PortBindings": {
+                "9200/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "9200"
+                    }
+                ],
+                "9300/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "9300"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": [],
+            "CapAdd": null,
+            "CapDrop": null,
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "shareable",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": false,
+            "PidsLimit": 0,
+            "Ulimits": [
+                {
+                    "Name": "memlock",
+                    "Hard": -1,
+                    "Soft": -1
+                }
+            ],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/asound",
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/85b891d9fe523b28e96afe4666209074ed1b2ffad01645eebc8f3fda162f5e50-init/diff:/var/lib/docker/overlay2/752c1ff89d687a482345a4aa163ef5388ef6812f2c0f70ff05e9d7d0dbe47213/diff:/var/lib/docker/overlay2/415657a868adeda00618f17b47916d89fb9e5e7a4a9dcb3bfa4cfd8b58c9a6f2/diff:/var/lib/docker/overlay2/b179087633f38fce94d0b54b8fb641048857cc18a32e8d9ebda6966f2b378427/diff:/var/lib/docker/overlay2/447c3dc13cdde86a6602745e49f14146984ab670e6e6eb18c9bb47f45454b2dd/diff:/var/lib/docker/overlay2/5184c110e9100b6bad4f562b10832fd5b548553ec730ffb5447e29453a0b1047/diff:/var/lib/docker/overlay2/62cb740297ecfafdc58c3ca56bc2c563e861fc6d353b226d5d9563303cec2df2/diff:/var/lib/docker/overlay2/70ccefc0d1d1f89589fa45597e2f2e23e628a3c50270e00c90ff2170a33da923/diff:/var/lib/docker/overlay2/e9b44abb9f24923364209fee91dd6ea7004a462b8b030a9329121f6fbc5554a8/diff",
+                "MergedDir": "/var/lib/docker/overlay2/85b891d9fe523b28e96afe4666209074ed1b2ffad01645eebc8f3fda162f5e50/merged",
+                "UpperDir": "/var/lib/docker/overlay2/85b891d9fe523b28e96afe4666209074ed1b2ffad01645eebc8f3fda162f5e50/diff",
+                "WorkDir": "/var/lib/docker/overlay2/85b891d9fe523b28e96afe4666209074ed1b2ffad01645eebc8f3fda162f5e50/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "services_esdata",
+                "Source": "/var/lib/docker/volumes/services_esdata/_data",
+                "Destination": "/usr/share/elasticsearch/data",
+                "Driver": "local",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "elasticsearch",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "9200/tcp": {},
+                "9300/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "cluster.name=kappa",
+                "network.host=0.0.0.0",
+                "discovery.zen.ping.unicast.hosts=192.168.1.100",
+                "discovery.zen.minimum_master_nodes=1",
+                "bootstrap.memory_lock=true",
+                "PATH=/usr/share/elasticsearch/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "ELASTIC_CONTAINER=true",
+                "JAVA_HOME=/opt/jdk-10.0.2"
+            ],
+            "Cmd": [
+                "eswrapper"
+            ],
+            "ArgsEscaped": true,
+            "Image": "docker.elastic.co/elasticsearch/elasticsearch:6.4.0",
+            "Volumes": {
+                "/usr/share/elasticsearch/data": {}
+            },
+            "WorkingDir": "/usr/share/elasticsearch",
+            "Entrypoint": [
+                "/usr/local/bin/docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "749f2d0c837551af38b6dd5b73a89bc1f933354fc9151ede790d6b00698a901b",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "services",
+                "com.docker.compose.service": "elasticsearch",
+                "com.docker.compose.version": "1.21.2",
+                "license": "Elastic License",
+                "org.label-schema.build-date": "20180804",
+                "org.label-schema.license": "GPLv2",
+                "org.label-schema.name": "elasticsearch",
+                "org.label-schema.schema-version": "1.0",
+                "org.label-schema.url": "https://www.elastic.co/products/elasticsearch",
+                "org.label-schema.vcs-url": "https://github.com/elastic/elasticsearch-docker",
+                "org.label-schema.vendor": "Elastic",
+                "org.label-schema.version": "6.4.0"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "73656bde0b6f0ee9a5493d52c909d4338eae443e9008e6da8f7df41874a9345f",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {},
+            "SandboxKey": "/var/run/docker/netns/default",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "host": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "1e27861319d93d4483ef866fa38ae478defe05b6880a79b844f8bacb8703bcb6",
+                    "EndpointID": "049dd47bf65c693a98bc4748a51a9b19c7db66cf163f90b49c5cd54b296e30c3",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "",
+                    "DriverOpts": null
+                }
+            }
+        }
+    }
+]

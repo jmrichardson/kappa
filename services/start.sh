@@ -34,6 +34,9 @@ docker-compose up -d kibana
 # Start elasticsearch cluster
 docker-compose up -d rabbitmq
 
+# docker-compose exec rabbitmq rabbitmqctl stop_app
+# docker-compose exec rabbitmq rabbitmqctl reset
+# docker-compose exec rabbitmq rabbitmqctl start_app
 
 # Start filebeat service
 port 9200 20
@@ -50,7 +53,7 @@ docker-compose up -d filebeat
 
 
 # Start elasticsearch cluster
-port 15672 20
+port 5672 20
 if [ $? -ne 0 ]; then
   echo "Error: Unable to start rabbitmq"
   exit 1

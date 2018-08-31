@@ -52,6 +52,19 @@ services:
       - elasticsearch
     command: filebeat -e -strict.perms=false
 
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbitmq
+    network_mode: "host"
+    image: "rabbitmq:3-management"
+    environment:
+    - ERLANG_COOKIE="secret string"
+    - CLUSTER_WITH=${rabbitmq_master}
+    ports: 
+      - '4369:4369'
+      - '5672:5672'
+      - '15672:15672'
+      - '25672:25672'
 
   # zookeeper:
     # container_name: zookeeper
@@ -83,13 +96,6 @@ services:
 # 
 
   
-  # rabbitmq:
-    # container_name: rabbitmq
-    # hostname: rabbitmq
-    # image: "rabbitmq:latest"
-    # ports: 
-      # - '5672:5672'
-      # - '15672:15672'
 # 
 
   # flower:

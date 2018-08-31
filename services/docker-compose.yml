@@ -1,70 +1,87 @@
 ---
 version: '3.4'
 services:
-  elasticsearch:
-    container_name: elasticsearch
-    hostname: elasticsearch
-    image: "docker.elastic.co/elasticsearch/elasticsearch:${es_ver}"
-    network_mode: "host"
-    environment:
-      - cluster.name=kappa
-      - network.host=0.0.0.0
-      - discovery.zen.ping.unicast.hosts=${es_master}
-      - discovery.zen.minimum_master_nodes=1
-      - bootstrap.memory_lock=true
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - esdata:/usr/share/elasticsearch/data
-    ports: 
-      - '9200:9200'
-      - '9300:9300'
-
-  kibana:
-    container_name: kibana
-    hostname: kibana
-    network_mode: "host"
-    image: "docker.elastic.co/kibana/kibana:${es_ver}"
-    environment:
-      - ELASTICSEARCH_URL=http://localhost:9200
-    # volumes:
-      # - ./config/kibana/kibana.yml:/usr/share/kibana/kibana.yml
-    ports: 
-      - '5601:5601'
-    depends_on:
-      - elasticsearch
-
-  filebeat:
-    container_name: filebeat
-    hostname: filebeat
-    network_mode: "host"
-    user: root
-    image: "docker.elastic.co/beats/filebeat:${es_ver}"
-    volumes:
-      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
-      - ./filebeat/fields.yml:/usr/share/filebeat/fields.yml
-      # Temporarily get news logs
-      - /home/kappa/packages/kappa_news/logs/:/var/log/kappa/
-      - fbdata:/usr/share/filebeat/data/
-    depends_on:
-      - elasticsearch
-    command: filebeat -e -strict.perms=false
+  ###elasticsearch:
+    ###container_name: elasticsearch
+    ###hostname: elasticsearch
+    ###image: "docker.elastic.co/elasticsearch/elasticsearch:${es_ver}"
+    ###network_mode: "host"
+    ###environment:
+      ###- cluster.name=kappa
+      ###- network.host=0.0.0.0
+      ###- discovery.zen.ping.unicast.hosts=${es_master}
+      ###- discovery.zen.minimum_master_nodes=1
+      ###- bootstrap.memory_lock=true
+    ###ulimits:
+      ###memlock:
+        ###soft: -1
+        ###hard: -1
+    ###volumes:
+      ###- esdata:/usr/share/elasticsearch/data
+    ###ports: 
+      ###- '9200:9200'
+      ###- '9300:9300'
+###
+  ###kibana:
+    ###container_name: kibana
+    ###hostname: kibana
+    ###network_mode: "host"
+    ###image: "docker.elastic.co/kibana/kibana:${es_ver}"
+    ###environment:
+      ###- ELASTICSEARCH_URL=http://localhost:9200
+    #### volumes:
+      #### - ./config/kibana/kibana.yml:/usr/share/kibana/kibana.yml
+    ###ports: 
+      ###- '5601:5601'
+    ###depends_on:
+      ###- elasticsearch
+###
+  ###filebeat:
+    ###container_name: filebeat
+    ###hostname: filebeat
+    ###network_mode: "host"
+    ###user: root
+    ###image: "docker.elastic.co/beats/filebeat:${es_ver}"
+    ###volumes:
+      ###- ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      ###- ./filebeat/fields.yml:/usr/share/filebeat/fields.yml
+      #### Temporarily get news logs
+      ###- /home/kappa/packages/kappa_news/logs/:/var/log/kappa/
+      ###- fbdata:/usr/share/filebeat/data/
+    ###depends_on:
+      ###- elasticsearch
+    ###command: filebeat -e -strict.perms=false
 
   rabbitmq:
     container_name: rabbitmq
     hostname: rabbitmq
     network_mode: "host"
-    image: "rabbitmq:3-management"
+    image: "bitnami/rabbitmq"
     environment:
-    - ERLANG_COOKIE="secret string"
-    - CLUSTER_WITH=${rabbitmq_master}
+      - RABBITMQ_ERL_COOKIE=secret
+      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq@rabbitmq
+      - RABBITMQ_NODE_NAME=rabbitmq@rabbitmq
+      - RABBITMQ_NODE_TYPE=stats
+    extra_hosts:
+      - "rabbitmq:192.168.1.100"
+      - "rabbitmq1:192.168.1.101"
     ports: 
       - '4369:4369'
       - '5672:5672'
       - '15672:15672'
       - '25672:25672'
+      - '35672:35672'
+
+  flower:
+    container_name: flower
+    hostname: flower
+    image: "mher/flower:latest"
+    environment:
+      - CELERY_BROKER_URL=amqp://user:bitnami@192.168.1.100:5672//
+    ports: 
+      - '5555:5555'
+# 
+
 
   # zookeeper:
     # container_name: zookeeper
@@ -96,16 +113,6 @@ services:
 # 
 
   
-# 
-
-  # flower:
-    # container_name: flower
-    # hostname: flower
-    # image: "mher/flower:latest"
-    # environment:
-      # - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
-    # ports: 
-      # - '5555:5555'
 # 
 
 volumes:

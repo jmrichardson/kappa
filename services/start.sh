@@ -63,4 +63,6 @@ cd ../src/ingest
 echo Starting alphavantage worker
 celery worker -D -A alphavantage --loglevel=info -f ../../logs/celery.log
 
+#end
+
 

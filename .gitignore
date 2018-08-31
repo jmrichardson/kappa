@@ -79,4 +79,4 @@ logs/
 .idea/
 *.swp
 git.sh
-
+.env

@@ -19,8 +19,11 @@ port() {
   return $state
 }
 
+
+### Start docker containers
+
 # Bring up required kappa services
-echo "Starting required kappa services ..."
+echo "Starting services ..."
 
 # Start elasticsearch cluster
 docker-compose up -d elasticsearch
@@ -28,8 +31,12 @@ docker-compose up -d elasticsearch
 # Start elasticsearch cluster
 docker-compose up -d kibana
 
+# Start elasticsearch cluster
+docker-compose up -d rabbitmq
+
+
 # Start filebeat service
-port 9200 10
+port 9200 20
 if [ $? -ne 0 ]; then
   echo "Error: ES cluster is not online"
   exit 1
@@ -40,4 +47,20 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 docker-compose up -d filebeat
+
+
+# Start elasticsearch cluster
+port 15672 20
+if [ $? -ne 0 ]; then
+  echo "Error: Unable to start rabbitmq"
+  exit 1
+fi
+docker-compose up -d flower
+
+### Start ingest workers daemons
+
+cd ../src/ingest
+echo Starting alphavantage worker
+celery worker -D -A alphavantage --loglevel=info -f ../../logs/celery.log
+
 

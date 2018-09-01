@@ -2,15 +2,15 @@
 # Function to wait for service ports
 port() {
   port=$1
-  seconds=$2
+  attempts=$2
   i=1
-  while [ $i -le $seconds ]; do
+  while [ $i -le $attempts ]; do
     nc -z localhost $port 
     if [ $? -ne 0 ]; then
-      echo Waiting for locahost:$port: $i of $seconds
+      echo Waiting for locahost:$port: $i of $attempts
       state=1
       let i=i+1 
-      sleep 10
+      sleep 15
     else
       state=0
       break 
@@ -39,7 +39,7 @@ docker-compose up -d rabbitmq
 # docker-compose exec rabbitmq rabbitmqctl start_app
 
 # Start filebeat service
-port 9200 20
+port 9200 30
 if [ $? -ne 0 ]; then
   echo "Error: ES cluster is not online"
   exit 1
@@ -53,7 +53,7 @@ docker-compose up -d filebeat
 
 
 # Start elasticsearch cluster
-port 5672 20
+port 5672 30
 if [ $? -ne 0 ]; then
   echo "Error: Unable to start rabbitmq"
   exit 1

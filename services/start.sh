@@ -52,13 +52,28 @@ fi
 docker-compose up -d filebeat
 
 
-# Start elasticsearch cluster
+# Start flower
 port 5672 30
 if [ $? -ne 0 ]; then
   echo "Error: Unable to start rabbitmq"
   exit 1
 fi
 docker-compose up -d flower
+
+# Start zookeeper
+docker-compose up -d zookeeper
+
+
+# Start kafka
+port 2181 30
+if [ $? -ne 0 ]; then
+  echo "Error: Unable to start zookeeper"
+  exit 1
+fi
+docker-compose up -d kafka
+
+exit
+
 
 ### Start ingest workers daemons
 

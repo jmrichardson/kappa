@@ -4,10 +4,10 @@
 
 # Define nodes in cluster
 node1='192.168.1.100'
-# node2='192.168.1.101'
+node2='192.168.1.101'
 
 # Specify node this script is on
-whoami="node1"
+whoami="node2"
 
 # Zookeeper needs to have at least 3 nodes specified above to cluster
 zoo_cluster="false"
@@ -18,6 +18,15 @@ zoo_cluster="false"
 node=`echo -n $whoami | tail -c 1`
 
 node_count=`( set -o posix ; set ) | grep "^node[0-9]" | cut -d= -f2 | sort | uniq | wc -l`
+
+# ifconfig -a | grep ${!whoami} > /dev/null
+# if [ $? -ne 0 ]; then
+  # echo "Error: whoami ip address is not configured on this host"
+  # exit 2
+# fi
+
+
+
 if [ $((node_count%2)) -eq 0 -a ${zoo_cluster} = "true" ]; then
   echo "Error: Must have >=3 and odd number of nodes to create zoo cluster"
   exit 1

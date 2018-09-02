@@ -64,10 +64,12 @@ services:
       - rmdata:/bitnami
     environment:
       - RABBITMQ_ERL_COOKIE=secret
-      - RABBITMQ_NODE_NAME=rabbitmq1@rabbitmq1
-      - RABBITMQ_NODE_TYPE=stats
+      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq1@rabbitmq1
+      - RABBITMQ_NODE_NAME=rabbitmq2@rabbitmq2
+      - RABBITMQ_NODE_TYPE=queue-disc
     extra_hosts:
       - "rabbitmq1:192.168.1.100"
+      - "rabbitmq2:192.168.1.101"
   flower:
     container_name: flower
     hostname: flower
@@ -77,20 +79,6 @@ services:
       - CELERY_BROKER_URL=amqp://user:bitnami@localhost:5672//
     ports:
       - '5555:5555'
-  zookeeper:
-    container_name: zookeeper
-    hostname: zookeeper
-    network_mode: "host"
-    image: zookeeper:3.5
-    restart: always
-    ports:
-      - "2181:2181"
-      - "2888:2888"
-      - "3888:3888"
-    environment:
-      - ZOO_MY_ID=1
-    volumes:
-      - zkdata:/data
   kafka:
     container_name: kafka
     hostname: kafka
@@ -100,7 +88,7 @@ services:
       - "9092:9092"
     environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_BROKER_ID=1
+      - KAFKA_BROKER_ID=2
       - KAFKA_ZOOKEEPER_CONNECT=192.168.1.100:2181
     volumes:
       - kkdata:/bitnami/kafka

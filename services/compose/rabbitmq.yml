@@ -9,6 +9,8 @@
       - '15672:15672'
       - '25672:25672'
       - '35672:35672'
+    volumes:
+      - rmdata:/bitnami
     environment:
       - RABBITMQ_ERL_COOKIE=secret
 EDIT1

@@ -60,14 +60,14 @@ services:
       - '15672:15672'
       - '25672:25672'
       - '35672:35672'
+    volumes:
+      - rmdata:/bitnami
     environment:
       - RABBITMQ_ERL_COOKIE=secret
-      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq1@rabbitmq1
       - RABBITMQ_NODE_NAME=rabbitmq1@rabbitmq1
       - RABBITMQ_NODE_TYPE=stats
     extra_hosts:
       - "rabbitmq1:192.168.1.100"
-      - "rabbitmq2:192.168.1.101"
   flower:
     container_name: flower
     hostname: flower
@@ -101,7 +101,7 @@ services:
     environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_BROKER_ID=1
-      - KAFKA_ZOOKEEPER_CONNECT=192.168.1.100:2181,192.168.1.101:2181
+      - KAFKA_ZOOKEEPER_CONNECT=192.168.1.100:2181
     volumes:
       - kkdata:/bitnami/kafka
     depends_on:
@@ -128,4 +128,6 @@ volumes:
   kkdata:
     driver: local
   zkdata:
+    driver: local
+  rmdata:
     driver: local

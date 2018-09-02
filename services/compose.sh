@@ -101,6 +101,7 @@ if [ ${zoo_cluster} = "true" ]; then
   sed -i "s/^.*KAFKA_ZOOKEEPER_CONNECT.*$/      - KAFKA_ZOOKEEPER_CONNECT=${servers}/" $file
 else
   sed -i "s/^.*KAFKA_ZOOKEEPER_CONNECT.*$/      - KAFKA_ZOOKEEPER_CONNECT=${node1}:2181/" $file
+  sed -i '/depends_on:/,/- zookeeper/d' $file
 fi
 sed -i "s/^.*kafka:192.168.1.100.*$/      - \"kafka:${node1}\"/" $file
 

@@ -1,0 +1,17 @@
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbitmq
+    network_mode: "host"
+    image: "bitnami/rabbitmq"
+    ports:
+      - '4369:4369'
+      - '5672:5672'
+      - '15672:15672'
+      - '25672:25672'
+      - '35672:35672'
+    environment:
+      - RABBITMQ_ERL_COOKIE=secret
+EDIT1
+EDIT2
+EDIT3
+    extra_hosts:

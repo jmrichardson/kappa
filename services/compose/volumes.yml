@@ -1,0 +1,9 @@
+volumes:
+  esdata:
+    driver: local
+  fbdata:
+    driver: local
+  kkdata:
+    driver: local
+  zkdata:
+    driver: local

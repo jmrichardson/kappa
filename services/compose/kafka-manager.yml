@@ -1,0 +1,12 @@
+  kafka-manager:
+    container_name: kafka-manager
+    hostname: kafka-manager
+    network_mode: "host"
+    image: sheepkiller/kafka-manager
+    ports:
+      - "9000:9000"
+    environment:
+      - ZK_HOSTS=localhost:2181
+      - APPLICATION_SECRET=letmein
+    depends_on:
+      - kafka

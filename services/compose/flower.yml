@@ -1,0 +1,8 @@
+  flower:
+    container_name: flower
+    hostname: flower
+    image: "mher/flower:latest"
+    environment:
+      - CELERY_BROKER_URL=amqp://user:bitnami@localhost:5672//
+    ports:
+      - '5555:5555'

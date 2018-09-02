@@ -60,16 +60,20 @@ if [ $? -ne 0 ]; then
 fi
 docker-compose up -d flower
 
+
 # Start zookeeper
-docker-compose up -d zookeeper
-
-
-# Start kafka
-port 2181 30
-if [ $? -ne 0 ]; then
-  echo "Error: Unable to start zookeeper"
-  exit 1
+grep "zookeeper:" docker-compose.yml > /dev/null
+if [ $? -eq 0 ]; then
+  docker-compose up -d zookeeper
+  port 2181 30
+  if [ $? -ne 0 ]; then
+    echo "Error: Unable to start zookeeper"
+    exit 1
+  fi
 fi
+
+
+# Start Kafka
 docker-compose up -d kafka
 
 

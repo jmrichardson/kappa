@@ -14,4 +14,4 @@
     depends_on:
       - zookeeper
     extra_hosts:
-EDIT3 - "kafka:192.168.1.100"
+      - "kafka:192.168.1.100"

@@ -1,14 +1,27 @@
 # Script to dynamically build docker-compose.yml
 
 ### USER DEFINED VARIABLES
+
+# Define nodes in cluster
 node1='192.168.1.100'
 node2='192.168.1.101'
+
+# Specify node this script is on
 whoami="node1"
-# zoo_cluster="false"
+
+# Zookeeper needs to have at least 3 nodes specified above to cluster
+zoo_cluster="false"
+
 ### END USER DEFINED VARIABLES
 
 # Node number
 node=`echo -n $whoami | tail -c 1`
+
+node_count=`( set -o posix ; set ) | grep "^node[0-9]" | cut -d= -f2 | sort | uniq | wc -l`
+if [ $((node_count%2)) -eq 0 -a ${zoo_cluster} = "true" ]; then
+  echo "Error: Must have >=3 and odd number of nodes to create zoo cluster"
+  exit 1
+fi
 
 # Docker compose file
 file='docker-compose.yml'
@@ -20,74 +33,73 @@ version: '3.4'
 services:
 DOC
 
+
+
 #--------- Elastic Search
-edit1="      - node1:192.168.1.100"
-sed "s/.*EDIT1.*/${edit1}/" compose/elasticsearch.yml >> $file
+cat compose/elasticsearch.yml >> $file
+echo "      - node1:${node1}" >> $file
+
+
 
 #--------- Kibana
 cat compose/kibana.yml >> $file
 
+
+
 #--------- Filebeat
 cat compose/filebeat.yml >> $file
+
+
 
 #--------- Rabbitmq
 rabbit="compose/rabbitmq.yml"
 if [ -v node2 ]; then
-  edit1="      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq1@rabbitmq1"
-  sed "s/.*EDIT1.*/${edit1}/" $rabbit >> $file
+  sed "s/^.*RABBITMQ_CLUSTER_NODE_NAME.*$/      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq1@rabbitmq1/" $rabbit >> $file
 else
-  sed "/.*EDIT1.*/d" $rabbit >> $file
+  sed "/^.*RABBITMQ_CLUSTER_NODE_NAME.*$/d" $rabbit >> $file
 fi
-
-edit2="      - RABBITMQ_NODE_NAME=rabbitmq${node}@rabbitmq${node}"
-sed -i "s/.*EDIT2.*/${edit2}/" $file
-
+sed -i "s/^.*RABBITMQ_NODE_NAME.*$/      - RABBITMQ_NODE_NAME=rabbitmq${node}@rabbitmq${node}/" $file
 if [ $node -eq 1 ]; then
-  edit3="      - RABBITMQ_NODE_TYPE=stats"
-  sed -i "s/.*EDIT3.*/${edit3}/" $file
+  sed -i "s/^.*RABBITMQ_NODE_TYPE.*$/      - RABBITMQ_NODE_TYPE=stats/" $file
 else
-  edit3="      - RABBITMQ_NODE_TYPE=queue-disc"
-  sed -i "s/.*EDIT3.*/${edit3}/" $file
+  sed -i "s/^.*RABBITMQ_NODE_TYPE.*$/      - RABBITMQ_NODE_TYPE=queue-disc/" $file
 fi
-
 ( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"rabbitmq/" | sed "s/=/:/" | sed 's/$/"/' >> $file
+
+
 
 #--------- Flower
 cat compose/flower.yml >> $file
 
+
+
 #--------- Zookeeper
-edit1="      - ZOO_MY_ID=${node}"
-sed "s/.*EDIT1.*/${edit1}/" compose/zookeeper.yml >> $file
+if [ ${zoo_cluster} = "true" ]; then
+  sed "s/^.*ZOO_MY_ID.*$/      - ZOO_MY_ID=${node}/" compose/zookeeper.yml >> $file
+  servers=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/server./" | sed "s/$/:2888:3888;2181/" | paste -s -d" "`
+  sed -i "s/^.*ZOO_SERVERS=.*$/      - ZOO_SERVERS=${servers}/" $file
+elif [ ${whoami} = "node1" ]; then
+  sed "s/^.*ZOO_MY_ID.*$/      - ZOO_MY_ID=${node}/" compose/zookeeper.yml >> $file
+  sed -i "/ZOO_SERVERS/d" $file
+fi
 
-edit2=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/server./" | sed "s/$/:2888:3888;2181/" | paste -s -d" "`
-sed -i "s/.*EDIT2.*/      - ZOO_SERVERS=${edit2}/" $file
 
-# if [ -v node2 -a ${zoo_cluster} = "true" ]; then
-  # edit2=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/server./" | sed "s/$/:2888:3888;2181/" | paste -s -d" "`
-  # sed -i "s/.*EDIT2.*/      - ZOO_SERVERS=${edit2}/" $file
-# else
-  # sed -i "s/.*EDIT2.*/      - ZOO_SERVERS=server.1=${node1}:2888:3888;2181/" $file
-# fi
 
 #--------- Kafka
-edit1="      - KAFKA_BROKER_ID=${node}"
-sed "s/.*EDIT1.*/${edit1}/" compose/kafka.yml >> $file
+sed "s/^.*KAFKA_BROKER_ID.*$/      - KAFKA_BROKER_ID=${node}/" compose/kafka.yml >> $file
+if [ ${zoo_cluster} = "true" ]; then
+  servers=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node.*=//" | sed "s/$/:2181/" | paste -s -d","`
+  sed -i "s/^.*KAFKA_ZOOKEEPER_CONNECT.*$/      - KAFKA_ZOOKEEPER_CONNECT=${servers}/" $file
+else
+  sed -i "s/^.*KAFKA_ZOOKEEPER_CONNECT.*$/      - KAFKA_ZOOKEEPER_CONNECT=${node1}:2181/" $file
+fi
+sed -i "s/^.*kafka:192.168.1.100.*$/      - \"kafka:${node1}\"/" $file
 
-edit2=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node.*=//" | sed "s/$/:2181/" | paste -s -d","`
-sed -i "s/.*EDIT2.*/      - KAFKA_ZOOKEEPER_CONNECT=${edit2}/" $file
 
-# if [ -v node2 -a ${zoo_cluster} = "true" ]; then
-  # edit2=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node.*=//" | sed "s/$/:2181/" | paste -s -d","`
-  # sed -i "s/.*EDIT2.*/      - KAFKA_ZOOKEEPER_CONNECT=${edit2}/" $file
-# else
-  # sed -i "s/.*EDIT2.*/      - KAFKA_ZOOKEEPER_CONNECT=${node1}:2181/" $file
-# fi
-
-edit3="kafka:${node1}"
-sed -i "s/.*EDIT3.*/      - \"${edit3}\"/" $file
 
 #--------- Kafka-manager
 cat compose/kafka-manager.yml >> $file
+
 
 
 #--------- Volumes

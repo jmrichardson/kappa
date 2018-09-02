@@ -9,7 +9,7 @@
       - "2888:2888"
       - "3888:3888"
     environment:
-EDIT1 - ZOO_MY_ID=1
-EDIT2 - ZOO_SERVERS=server.1=0.0.0.0:2888:3888
+      - ZOO_MY_ID=1
+      - ZOO_SERVERS=server.1=0.0.0.0:2888:3888
     volumes:
       - zkdata:/data

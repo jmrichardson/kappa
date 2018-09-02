@@ -7,8 +7,8 @@
       - "9092:9092"
     environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
-EDIT1 - KAFKA_BROKER_ID=1
-EDIT2 - KAFKA_ZOOKEEPER_CONNECT=localhost:2181
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=localhost:2181
     volumes:
       - kkdata:/bitnami/kafka
     depends_on:

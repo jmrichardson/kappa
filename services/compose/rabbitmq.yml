@@ -13,7 +13,7 @@
       - rmdata:/bitnami
     environment:
       - RABBITMQ_ERL_COOKIE=secret
-EDIT1
-EDIT2
-EDIT3
+      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq1@rabbitmq1
+      - RABBITMQ_NODE_NAME=rabbitmq1@rabbitmq1"
+      - RABBITMQ_NODE_TYPE=stats
     extra_hosts:

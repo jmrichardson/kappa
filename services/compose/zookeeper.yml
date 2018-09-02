@@ -3,6 +3,7 @@
     hostname: zookeeper
     network_mode: "host"
     image: zookeeper:3.5
+    restart: always
     ports:
       - "2181:2181"
       - "2888:2888"

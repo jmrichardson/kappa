@@ -64,10 +64,12 @@ services:
       - rmdata:/bitnami
     environment:
       - RABBITMQ_ERL_COOKIE=secret
+      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq1@rabbitmq1
       - RABBITMQ_NODE_NAME=rabbitmq1@rabbitmq1
       - RABBITMQ_NODE_TYPE=stats
     extra_hosts:
       - "rabbitmq1:192.168.1.100"
+      - "rabbitmq2:192.168.1.101"
   flower:
     container_name: flower
     hostname: flower
@@ -82,13 +84,14 @@ services:
     hostname: zookeeper
     network_mode: "host"
     image: zookeeper:3.5
+    restart: always
     ports:
       - "2181:2181"
       - "2888:2888"
       - "3888:3888"
     environment:
       - ZOO_MY_ID=1
-      - ZOO_SERVERS=server.1=192.168.1.100:2888:3888;2181
+      - ZOO_SERVERS=server.1=192.168.1.100:2888:3888;2181 server.2=192.168.1.101:2888:3888;2181
     volumes:
       - zkdata:/data
   kafka:
@@ -101,7 +104,7 @@ services:
     environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_BROKER_ID=1
-      - KAFKA_ZOOKEEPER_CONNECT=192.168.1.100:2181
+      - KAFKA_ZOOKEEPER_CONNECT=192.168.1.100:2181,192.168.1.101:2181
     volumes:
       - kkdata:/bitnami/kafka
     depends_on:

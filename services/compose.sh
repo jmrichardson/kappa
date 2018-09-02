@@ -2,9 +2,9 @@
 
 ### USER DEFINED VARIABLES
 node1='192.168.1.100'
-# node2='192.168.1.101'
+node2='192.168.1.101'
 whoami="node1"
-zoo_cluster="false"
+# zoo_cluster="false"
 ### END USER DEFINED VARIABLES
 
 # Node number
@@ -59,23 +59,29 @@ cat compose/flower.yml >> $file
 edit1="      - ZOO_MY_ID=${node}"
 sed "s/.*EDIT1.*/${edit1}/" compose/zookeeper.yml >> $file
 
-if [ -v node2 -a ${zoo_cluster} = "true" ]; then
-  edit2=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/server./" | sed "s/$/:2888:3888;2181/" | paste -s -d" "`
-  sed -i "s/.*EDIT2.*/      - ZOO_SERVERS=${edit2}/" $file
-else
-  sed -i "s/.*EDIT2.*/      - ZOO_SERVERS=server.1=${node1}:2888:3888;2181/" $file
-fi
+edit2=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/server./" | sed "s/$/:2888:3888;2181/" | paste -s -d" "`
+sed -i "s/.*EDIT2.*/      - ZOO_SERVERS=${edit2}/" $file
+
+# if [ -v node2 -a ${zoo_cluster} = "true" ]; then
+  # edit2=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/server./" | sed "s/$/:2888:3888;2181/" | paste -s -d" "`
+  # sed -i "s/.*EDIT2.*/      - ZOO_SERVERS=${edit2}/" $file
+# else
+  # sed -i "s/.*EDIT2.*/      - ZOO_SERVERS=server.1=${node1}:2888:3888;2181/" $file
+# fi
 
 #--------- Kafka
 edit1="      - KAFKA_BROKER_ID=${node}"
 sed "s/.*EDIT1.*/${edit1}/" compose/kafka.yml >> $file
 
-if [ -v node2 -a ${zoo_cluster} = "true" ]; then
-  edit2=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node.*=//" | sed "s/$/:2181/" | paste -s -d","`
-  sed -i "s/.*EDIT2.*/      - KAFKA_ZOOKEEPER_CONNECT=${edit2}/" $file
-else
-  sed -i "s/.*EDIT2.*/      - KAFKA_ZOOKEEPER_CONNECT=${node1}:2181/" $file
-fi
+edit2=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node.*=//" | sed "s/$/:2181/" | paste -s -d","`
+sed -i "s/.*EDIT2.*/      - KAFKA_ZOOKEEPER_CONNECT=${edit2}/" $file
+
+# if [ -v node2 -a ${zoo_cluster} = "true" ]; then
+  # edit2=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node.*=//" | sed "s/$/:2181/" | paste -s -d","`
+  # sed -i "s/.*EDIT2.*/      - KAFKA_ZOOKEEPER_CONNECT=${edit2}/" $file
+# else
+  # sed -i "s/.*EDIT2.*/      - KAFKA_ZOOKEEPER_CONNECT=${node1}:2181/" $file
+# fi
 
 edit3="kafka:${node1}"
 sed -i "s/.*EDIT3.*/      - \"${edit3}\"/" $file

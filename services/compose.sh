@@ -4,7 +4,7 @@
 
 # Define nodes in cluster
 node1='192.168.1.100'
-node2='192.168.1.101'
+# node2='192.168.1.101'
 
 # Specify node this script is on
 whoami="node1"

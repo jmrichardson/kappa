@@ -72,8 +72,10 @@ if [ $? -ne 0 ]; then
 fi
 docker-compose up -d kafka
 
-exit
 
+docker-compose up -d kafka-manager
+
+exit
 
 ### Start ingest workers daemons
 

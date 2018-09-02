@@ -1,3 +1,4 @@
+# DON'T MODIFY THIS FILE MANUALLY
 version: '3.4'
 services:
   elasticsearch:
@@ -61,13 +62,16 @@ services:
       - '35672:35672'
     environment:
       - RABBITMQ_ERL_COOKIE=secret
+      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq1@rabbitmq1
       - RABBITMQ_NODE_NAME=rabbitmq1@rabbitmq1
       - RABBITMQ_NODE_TYPE=stats
     extra_hosts:
       - "rabbitmq1:192.168.1.100"
+      - "rabbitmq2:192.168.1.101"
   flower:
     container_name: flower
     hostname: flower
+    network_mode: "host"
     image: "mher/flower:latest"
     environment:
       - CELERY_BROKER_URL=amqp://user:bitnami@localhost:5672//
@@ -77,17 +81,16 @@ services:
     container_name: zookeeper
     hostname: zookeeper
     network_mode: "host"
-    image: bitnami/zookeeper:latest
+    image: zookeeper:3.5
     ports:
       - "2181:2181"
       - "2888:2888"
       - "3888:3888"
     environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-      - ZOO_SERVER_ID=1
-      - ZOO_SERVERS=server.1=192.168.1.100:2888:3888
+      - ZOO_MY_ID=1
+      - ZOO_SERVERS=server.1=192.168.1.100:2888:3888;2181
     volumes:
-      - zkdata:/bitnami/zookeeper
+      - zkdata:/data
   kafka:
     container_name: kafka
     hostname: kafka
@@ -98,7 +101,7 @@ services:
     environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_BROKER_ID=1
-      - KAFKA_ZOOKEEPER_CONNECT=192.168.1.100:2181
+      - KAFKA_ZOOKEEPER_CONNECT=192.168.1.100:2181,192.168.1.101:2181
     volumes:
       - kkdata:/bitnami/kafka
     depends_on:

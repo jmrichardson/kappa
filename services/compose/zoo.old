@@ -2,13 +2,14 @@
     container_name: zookeeper
     hostname: zookeeper
     network_mode: "host"
-    image: zookeeper:3.5
+    image: bitnami/zookeeper:latest
     ports:
       - "2181:2181"
       - "2888:2888"
       - "3888:3888"
     environment:
-EDIT1 - ZOO_MY_ID=1
+      - ALLOW_ANONYMOUS_LOGIN=yes
+EDIT1 - ZOO_SERVER_ID=1
 EDIT2 - ZOO_SERVERS=server.1=0.0.0.0:2888:3888
     volumes:
-      - zkdata:/data
+      - zkdata:/bitnami/zookeeper

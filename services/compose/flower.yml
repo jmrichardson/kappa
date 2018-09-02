@@ -1,6 +1,7 @@
   flower:
     container_name: flower
     hostname: flower
+    network_mode: "host"
     image: "mher/flower:latest"
     environment:
       - CELERY_BROKER_URL=amqp://user:bitnami@localhost:5672//

@@ -14,11 +14,13 @@ zoo_cluster="false"
 
 ### END USER DEFINED VARIABLES
 
-# Node number
+# My node number
 node=`echo -n $whoami | tail -c 1`
 
+# Number of nodes defined
 node_count=`( set -o posix ; set ) | grep "^node[0-9]" | cut -d= -f2 | sort | uniq | wc -l`
 
+# Make sure my ip address is configured
 ifconfig -a | grep ${!whoami} > /dev/null
 if [ $? -ne 0 ]; then
   echo "Error: whoami ip address is not configured on this host"
@@ -61,18 +63,15 @@ cat compose/filebeat.yml >> $file
 
 
 #--------- Rabbitmq
-rabbit="compose/rabbitmq.yml"
-if [ -v node2 ]; then
-  sed "s/^.*RABBITMQ_CLUSTER_NODE_NAME.*$/      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq1@rabbitmq1/" $rabbit >> $file
-else
-  sed "/^.*RABBITMQ_CLUSTER_NODE_NAME.*$/d" $rabbit >> $file
-fi
-sed -i "s/^.*RABBITMQ_NODE_NAME.*$/      - RABBITMQ_NODE_NAME=rabbitmq${node}@rabbitmq${node}/" $file
-if [ $node -eq 1 ]; then
+sed "s/hostname: rabbitmq/hostname: rabbitmq${node}/" compose/rabbitmq.yml >> $file
+if [ ${node} -eq 1 ]; then
+  sed -i "/^.*RABBITMQ_CLUSTER_NODE_NAME.*$/d" $file
   sed -i "s/^.*RABBITMQ_NODE_TYPE.*$/      - RABBITMQ_NODE_TYPE=stats/" $file
 else
+  sed -i "s/^.*RABBITMQ_CLUSTER_NODE_NAME.*$/      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq@rabbitmq1/" $file
   sed -i "s/^.*RABBITMQ_NODE_TYPE.*$/      - RABBITMQ_NODE_TYPE=queue-disc/" $file
 fi
+sed -i "s/^.*RABBITMQ_NODE_NAME.*$/      - RABBITMQ_NODE_NAME=rabbitmq@rabbitmq${node}/" $file
 ( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"rabbitmq/" | sed "s/=/:/" | sed 's/$/"/' >> $file
 
 

@@ -17,7 +17,7 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - esdata:/usr/share/elasticsearch/data
+      - elasticsearch:/usr/share/elasticsearch/data
     ports:
       - '9200:9200'
       - '9300:9300'
@@ -45,13 +45,13 @@ services:
       - ./filebeat/fields.yml:/usr/share/filebeat/fields.yml
       # Temporarily get news logs
       - /home/kappa/packages/kappa_news/logs/:/var/log/kappa/
-      - fbdata:/usr/share/filebeat/data/
+      - filebeat:/usr/share/filebeat/data/
     depends_on:
       - elasticsearch
     command: filebeat -e -strict.perms=false
   rabbitmq:
     container_name: rabbitmq
-    hostname: rabbitmq
+    hostname: rabbitmq1
     network_mode: "host"
     image: "bitnami/rabbitmq"
     ports:
@@ -61,11 +61,10 @@ services:
       - '25672:25672'
       - '35672:35672'
     volumes:
-      - rmdata:/bitnami
+      - rabbitmq:/bitnami
     environment:
       - RABBITMQ_ERL_COOKIE=secret
-      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq1@rabbitmq1
-      - RABBITMQ_NODE_NAME=rabbitmq1@rabbitmq1
+      - RABBITMQ_NODE_NAME=rabbitmq@rabbitmq1
       - RABBITMQ_NODE_TYPE=stats
     extra_hosts:
       - "rabbitmq1:192.168.1.100"
@@ -92,7 +91,7 @@ services:
     environment:
       - ZOO_MY_ID=1
     volumes:
-      - zkdata:/data
+      - zookeeper:/data
   kafka:
     container_name: kafka
     hostname: kafka
@@ -105,7 +104,7 @@ services:
       - KAFKA_BROKER_ID=1
       - KAFKA_ZOOKEEPER_CONNECT=192.168.1.100:2181
     volumes:
-      - kkdata:/bitnami/kafka
+      - kafka:/bitnami/kafka
     depends_on:
       - zookeeper
     extra_hosts:
@@ -123,13 +122,13 @@ services:
     depends_on:
       - kafka
 volumes:
-  esdata:
+  elasticsearch:
     driver: local
-  fbdata:
+  filebeat:
     driver: local
-  kkdata:
+  kafka:
     driver: local
-  zkdata:
+  zookeeper:
     driver: local
-  rmdata:
+  rabbitmq:
     driver: local

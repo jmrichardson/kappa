@@ -1,11 +1,11 @@
 volumes:
-  esdata:
+  elasticsearch:
     driver: local
-  fbdata:
+  filebeat:
     driver: local
-  kkdata:
+  kafka:
     driver: local
-  zkdata:
+  zookeeper:
     driver: local
-  rmdata:
+  rabbitmq:
     driver: local

@@ -6,7 +6,7 @@ node1='192.168.1.100'
 node2='192.168.1.101'
 
 # Specify node this script is on
-whoami="node1"
+whoami="node2"
 
 # Zookeeper needs to have at least 3 nodes specified above to cluster
 zoo_cluster="false"
@@ -60,14 +60,19 @@ cat compose/filebeat.yml >> $file
 
 # Rabbitmq
 sed "s/hostname: rabbitmq/hostname: rabbitmq${node}/" compose/rabbitmq.yml >> $file
-if [ ${node} -eq 1 ]; then
-  sed -i "/^.*RABBITMQ_CLUSTER_NODE_NAME.*$/d" $file
-  sed -i "s/^.*RABBITMQ_NODE_TYPE.*$/      - RABBITMQ_NODE_TYPE=stats/" $file
-else
-  sed -i "s/^.*RABBITMQ_CLUSTER_NODE_NAME.*$/      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq@rabbitmq1/" $file
-  sed -i "s/^.*RABBITMQ_NODE_TYPE.*$/      - RABBITMQ_NODE_TYPE=queue-disc/" $file
+# if [ ${node} -eq 1 ]; then
+  # sed -i "/^.*RABBITMQ_CLUSTER_NODE_NAME.*$/d" $file
+  # sed -i "s/^.*RABBITMQ_NODE_TYPE.*$/      - RABBITMQ_NODE_TYPE=stats/" $file
+# else
+  # sed -i "s/^.*RABBITMQ_CLUSTER_NODE_NAME.*$/      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq@rabbitmq1/" $file
+  # sed -i "s/^.*RABBITMQ_NODE_TYPE.*$/      - RABBITMQ_NODE_TYPE=queue-disc/" $file
+# fi
+if [ ${node} -ne 1 ]; then
+  echo "    volumes:" >> $file
+  echo "      - ./rabbitmq/cluster-entrypoint.sh:/usr/local/bin/cluster-entrypoint.sh" >> $file
 fi
 sed -i "s/^.*RABBITMQ_NODE_NAME.*$/      - RABBITMQ_NODE_NAME=rabbitmq@rabbitmq${node}/" $file
+echo "    extra_hosts:" >> $file
 ( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"rabbitmq/" | sed "s/=/:/" | sed 's/$/"/' >> $file
 
 # Flower
@@ -102,6 +107,7 @@ sed "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=${node1}:2181/" compose/ka
 # Volumes
 cat compose/volumes.yml >> $file
 
+exit
 
 # Function to wait for service ports
 port() {

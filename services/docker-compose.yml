@@ -34,8 +34,6 @@ services:
       - ELASTICSEARCH_URL=http://localhost:9200
     ports:
       - '5601:5601'
-    depends_on:
-      - elasticsearch
   filebeat:
     container_name: filebeat
     hostname: filebeat
@@ -49,27 +47,23 @@ services:
       # Temporarily get news logs
       - /home/kappa/packages/kappa_news/logs/:/var/log/kappa/
       - filebeat:/usr/share/filebeat/data/
-    depends_on:
-      - elasticsearch
     command: filebeat -e -strict.perms=false
   rabbitmq:
     container_name: rabbitmq
-    hostname: rabbitmq1
+    hostname: rabbitmq2
     network_mode: "host"
     restart: unless-stopped
-    image: "bitnami/rabbitmq"
+    image: rabbitmq:3-management
     ports:
       - '4369:4369'
       - '5672:5672'
       - '15672:15672'
       - '25672:25672'
       - '35672:35672'
-    volumes:
-      - rabbitmq:/bitnami
     environment:
-      - RABBITMQ_ERL_COOKIE=secret
-      - RABBITMQ_NODE_NAME=rabbitmq@rabbitmq1
-      - RABBITMQ_NODE_TYPE=stats
+      - RABBITMQ_ERLANG_COOKIE=secret
+    volumes:
+      - ./rabbitmq/cluster-entrypoint.sh:/usr/local/bin/cluster-entrypoint.sh
     extra_hosts:
       - "rabbitmq1:192.168.1.100"
       - "rabbitmq2:192.168.1.101"
@@ -83,20 +77,6 @@ services:
       - CELERY_BROKER_URL=amqp://user:bitnami@localhost:5672//
     ports:
       - '5555:5555'
-  zookeeper:
-    container_name: zookeeper
-    hostname: zookeeper
-    network_mode: "host"
-    restart: unless-stopped
-    image: zookeeper:3.5
-    ports:
-      - "2181:2181"
-      - "2888:2888"
-      - "3888:3888"
-    environment:
-      - ZOO_MY_ID=1
-    volumes:
-      - zookeeper:/data
   kafka:
     container_name: kafka
     hostname: kafka
@@ -107,12 +87,10 @@ services:
       - "9092:9092"
     environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_BROKER_ID=1
+      - KAFKA_BROKER_ID=2
       - KAFKA_ZOOKEEPER_CONNECT=192.168.1.100:2181
     volumes:
       - kafka:/bitnami/kafka
-    depends_on:
-      - zookeeper
     extra_hosts:
       - "kafka:192.168.1.100"
   kafka-manager:

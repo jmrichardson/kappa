@@ -3,18 +3,12 @@
     hostname: rabbitmq
     network_mode: "host"
     restart: unless-stopped
-    image: "bitnami/rabbitmq"
+    image: rabbitmq:3-management
     ports:
       - '4369:4369'
       - '5672:5672'
       - '15672:15672'
       - '25672:25672'
       - '35672:35672'
-    volumes:
-      - rabbitmq:/bitnami
     environment:
-      - RABBITMQ_ERL_COOKIE=secret
-      - RABBITMQ_CLUSTER_NODE_NAME=rabbitmq1@rabbitmq1
-      - RABBITMQ_NODE_NAME=rabbitmq1@rabbitmq1"
-      - RABBITMQ_NODE_TYPE=stats
-    extra_hosts:
+      - RABBITMQ_ERLANG_COOKIE=secret

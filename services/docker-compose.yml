@@ -6,6 +6,7 @@ services:
     hostname: elasticsearch
     image: "docker.elastic.co/elasticsearch/elasticsearch:6.4.0"
     network_mode: "host"
+    restart: unless-stopped
     environment:
       - cluster.name=kappa
       - network.host=0.0.0.0
@@ -27,6 +28,7 @@ services:
     container_name: kibana
     hostname: kibana
     network_mode: "host"
+    restart: unless-stopped
     image: "docker.elastic.co/kibana/kibana:6.4.0"
     environment:
       - ELASTICSEARCH_URL=http://localhost:9200
@@ -38,6 +40,7 @@ services:
     container_name: filebeat
     hostname: filebeat
     network_mode: "host"
+    restart: unless-stopped
     user: root
     image: "docker.elastic.co/beats/filebeat:6.4.0"
     volumes:
@@ -53,6 +56,7 @@ services:
     container_name: rabbitmq
     hostname: rabbitmq1
     network_mode: "host"
+    restart: unless-stopped
     image: "bitnami/rabbitmq"
     ports:
       - '4369:4369'
@@ -73,6 +77,7 @@ services:
     container_name: flower
     hostname: flower
     network_mode: "host"
+    restart: unless-stopped
     image: "mher/flower:latest"
     environment:
       - CELERY_BROKER_URL=amqp://user:bitnami@localhost:5672//
@@ -82,8 +87,8 @@ services:
     container_name: zookeeper
     hostname: zookeeper
     network_mode: "host"
+    restart: unless-stopped
     image: zookeeper:3.5
-    restart: always
     ports:
       - "2181:2181"
       - "2888:2888"
@@ -96,6 +101,7 @@ services:
     container_name: kafka
     hostname: kafka
     network_mode: "host"
+    restart: unless-stopped
     image: bitnami/kafka
     ports:
       - "9092:9092"
@@ -113,6 +119,7 @@ services:
     container_name: kafka-manager
     hostname: kafka-manager
     network_mode: "host"
+    restart: unless-stopped
     image: sheepkiller/kafka-manager
     ports:
       - "9000:9000"

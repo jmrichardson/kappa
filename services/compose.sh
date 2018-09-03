@@ -1,6 +1,5 @@
-# Script to dynamically build docker-compose.yml
-
-### USER DEFINED VARIABLES
+#!/bin/bash
+# Script to build and start services
 
 # Define nodes in cluster
 node1='192.168.1.100'
@@ -12,7 +11,7 @@ whoami="node1"
 # Zookeeper needs to have at least 3 nodes specified above to cluster
 zoo_cluster="false"
 
-### END USER DEFINED VARIABLES
+########################## DO NOT EDIT BELOW THIS LINE
 
 # My node number
 node=`echo -n $whoami | tail -c 1`
@@ -27,42 +26,33 @@ if [ $? -ne 0 ]; then
   exit 2
 fi
 
-
-
+# Make sure we have enough zoo keeper nodes if clusterd
 if [ $((node_count%2)) -eq 0 -a ${zoo_cluster} = "true" ]; then
   echo "Error: Must have >=3 and odd number of nodes to create zoo cluster"
   exit 1
 fi
 
-# Docker compose file
+# Docker compose file location
 file='docker-compose.yml'
 
-# Create file
+# Create docker-compose file
 cat <<DOC > $file
 # DON'T MODIFY THIS FILE MANUALLY
 version: '3.4'
 services:
 DOC
 
-
-
-#--------- Elastic Search
+# Elastic Search
 cat compose/elasticsearch.yml >> $file
 echo "      - node1:${node1}" >> $file
 
-
-
-#--------- Kibana
+# Kibana
 cat compose/kibana.yml >> $file
 
-
-
-#--------- Filebeat
+# Filebeat
 cat compose/filebeat.yml >> $file
 
-
-
-#--------- Rabbitmq
+# Rabbitmq
 sed "s/hostname: rabbitmq/hostname: rabbitmq${node}/" compose/rabbitmq.yml >> $file
 if [ ${node} -eq 1 ]; then
   sed -i "/^.*RABBITMQ_CLUSTER_NODE_NAME.*$/d" $file
@@ -74,14 +64,10 @@ fi
 sed -i "s/^.*RABBITMQ_NODE_NAME.*$/      - RABBITMQ_NODE_NAME=rabbitmq@rabbitmq${node}/" $file
 ( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"rabbitmq/" | sed "s/=/:/" | sed 's/$/"/' >> $file
 
-
-
-#--------- Flower
+# Flower
 cat compose/flower.yml >> $file
 
-
-
-#--------- Zookeeper
+# Zookeeper
 if [ ${zoo_cluster} = "true" ]; then
   sed "s/^.*ZOO_MY_ID.*$/      - ZOO_MY_ID=${node}/" compose/zookeeper.yml >> $file
   servers=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/server./" | sed "s/$/:2888:3888;2181/" | paste -s -d" "`
@@ -91,9 +77,7 @@ elif [ ${whoami} = "node1" ]; then
   sed -i "/ZOO_SERVERS/d" $file
 fi
 
-
-
-#--------- Kafka
+# Kafka
 sed "s/^.*KAFKA_BROKER_ID.*$/      - KAFKA_BROKER_ID=${node}/" compose/kafka.yml >> $file
 if [ ${zoo_cluster} = "true" ]; then
   servers=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node.*=//" | sed "s/$/:2181/" | paste -s -d","`
@@ -106,13 +90,100 @@ if [ $node -ne 1 ]; then
 fi
 sed -i "s/^.*kafka:192.168.1.100.*$/      - \"kafka:${node1}\"/" $file
 
-
-
-#--------- Kafka-manager
+# Kafka-manager
 cat compose/kafka-manager.yml >> $file
 
-
-
-#--------- Volumes
+# Volumes
 cat compose/volumes.yml >> $file
+
+# Function to wait for service ports
+port() {
+  service=$1
+  port=$2
+  attempts=$3
+  i=1
+  while [ $i -le $attempts ]; do
+    nc -z localhost $port 
+    if [ $? -ne 0 ]; then
+      echo Waiting for $service on port $port: $i of $attempts
+      state=1
+      let i=i+1 
+      sleep 15
+    else
+      state=0
+      break 
+    fi
+  done
+  return $state
+}
+
+# Bring up required kappa services
+echo "Starting services ..."
+
+# Start elasticsearch cluster
+docker-compose up -d elasticsearch
+
+# Start elasticsearch cluster
+docker-compose up -d kibana
+
+# Start elasticsearch cluster
+docker-compose up -d rabbitmq
+
+# docker-compose exec rabbitmq rabbitmqctl stop_app
+# docker-compose exec rabbitmq rabbitmqctl reset
+# docker-compose exec rabbitmq rabbitmqctl start_app
+
+# Wait for elasticsearch
+port "elasticsearch" 9200 30
+if [ $? -ne 0 ]; then
+  echo "Error: ES cluster is not online"
+  exit 1
+fi
+
+# Create filebeat pipeline
+curl -s -XPUT 'localhost:9200/_ingest/pipeline/filebeat' --header "Content-Type: application/json" -T "filebeat/pipeline.json" | grep -q ack
+if [ $? -ne 0 ]; then
+  echo "Error: Unable to create filebeat pipeline"
+  exit 1
+fi
+
+# Start filebeat
+docker-compose up -d filebeat
+
+# Start zookeeper if required
+grep "zookeeper:" docker-compose.yml > /dev/null
+if [ $? -eq 0 ]; then
+  docker-compose up -d zookeeper
+  port "zookeeper" 2181 30
+  if [ $? -ne 0 ]; then
+    echo "Error: Unable to start zookeeper"
+    exit 1
+  fi
+fi
+
+# Wait for rabbitmq
+port "rabbitmq" 5672 30
+if [ $? -ne 0 ]; then
+  echo "Error: Unable to start rabbitmq"
+  exit 1
+fi
+
+# Start flower
+docker-compose up -d flower
+
+# Start Kafka
+docker-compose up -d kafka
+
+# Start Kafka Manager
+docker-compose up -d kafka-manager
+
+exit
+
+### Start ingest workers daemons
+
+cd ../src/ingest
+echo Starting alphavantage worker
+celery worker -D -A alphavantage --loglevel=info -f ../../logs/celery.log
+
+
 

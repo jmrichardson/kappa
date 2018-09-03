@@ -2,6 +2,7 @@
     container_name: kafka-manager
     hostname: kafka-manager
     network_mode: "host"
+    restart: unless-stopped
     image: sheepkiller/kafka-manager
     ports:
       - "9000:9000"

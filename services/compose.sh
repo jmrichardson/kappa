@@ -32,6 +32,12 @@ if [ $((node_count%2)) -eq 0 -a ${zoo_cluster} = "true" ]; then
   exit 1
 fi
 
+echo -e "\nStart all services on this node\n"
+echo "Defined nodes (* indicates this node):"
+( set -o posix ; set ) | grep "^node[0-9]" | sed "s/\(^${whoami}.*\)/\1 */"
+echo -e "\nPress <ENTER> to begin / <CTRL -C> to cancel"
+read dummy
+
 # Docker compose file location
 file='docker-compose.yml'
 

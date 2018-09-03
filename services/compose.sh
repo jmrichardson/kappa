@@ -32,11 +32,12 @@ if [ $((node_count%2)) -eq 0 -a ${zoo_cluster} = "true" ]; then
   exit 1
 fi
 
-echo -e "\nStart all services on this node\n"
-echo "Defined nodes (* indicates this node):"
+echo -e "\nDefined nodes (* indicates this node):"
 ( set -o posix ; set ) | grep "^node[0-9]" | sed "s/\(^${whoami}.*\)/\1 */"
-echo -e "\nPress <ENTER> to begin / <CTRL -C> to cancel"
-read dummy
+echo 
+read -e -p "Start services(yes/no): " -i "yes" start
+
+
 
 # Docker compose file location
 file='docker-compose.yml'
@@ -70,7 +71,9 @@ sed "s/hostname: rabbitmq/hostname: rabbitmq${node}/" compose/rabbitmq.yml >> $f
 if [ ${node} -ne 1 ]; then
   echo "    volumes:" >> $file
   echo "      - ./rabbitmq/cluster-entrypoint.sh:/usr/local/bin/cluster-entrypoint.sh" >> $file
-  echo "    entrypoint: /usr/local/bin/cluster-entrypoint.sh" >> $file
+  echo "    entrypoint:"
+  echo "      - sh"
+  echo "      - /usr/local/bin/cluster-entrypoint.sh" >> $file
 fi
 sed -i "s/^.*RABBITMQ_NODE_NAME.*$/      - RABBITMQ_NODE_NAME=rabbitmq@rabbitmq${node}/" $file
 echo "    extra_hosts:" >> $file
@@ -108,7 +111,10 @@ sed "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=${node1}:2181/" compose/ka
 # Volumes
 cat compose/volumes.yml >> $file
 
-exit
+echo -e "\ndocker-compose.yml created"
+if [ "$start" != "yes" ]; then
+  exit
+fi
 
 # Function to wait for service ports
 port() {

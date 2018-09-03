@@ -6,7 +6,7 @@ node1='192.168.1.100'
 node2='192.168.1.101'
 
 # Specify node this script is on
-whoami="node2"
+whoami="node1"
 
 # Zookeeper needs to have at least 3 nodes specified above to cluster
 zoo_cluster="false"
@@ -70,6 +70,7 @@ sed "s/hostname: rabbitmq/hostname: rabbitmq${node}/" compose/rabbitmq.yml >> $f
 if [ ${node} -ne 1 ]; then
   echo "    volumes:" >> $file
   echo "      - ./rabbitmq/cluster-entrypoint.sh:/usr/local/bin/cluster-entrypoint.sh" >> $file
+  echo "    entrypoint: /usr/local/bin/cluster-entrypoint.sh" >> $file
 fi
 sed -i "s/^.*RABBITMQ_NODE_NAME.*$/      - RABBITMQ_NODE_NAME=rabbitmq@rabbitmq${node}/" $file
 echo "    extra_hosts:" >> $file

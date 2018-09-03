@@ -5,6 +5,6 @@
     restart: unless-stopped
     image: "mher/flower:latest"
     environment:
-      - CELERY_BROKER_URL=amqp://user:bitnami@localhost:5672//
+      - CELERY_BROKER_URL=amqp://guest:guest@localhost:5672//
     ports:
       - '5555:5555'

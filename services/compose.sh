@@ -97,10 +97,11 @@ fi
 sed -i "s/^.*kafka:192.168.1.100.*$/      - \"kafka:${node1}\"/" $file
 
 # Kafka-manager
-cat compose/kafka-manager.yml >> $file
+sed "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=${node1}:2181/" compose/kafka-manager.yml >> $file
 
 # Volumes
 cat compose/volumes.yml >> $file
+
 
 # Function to wait for service ports
 port() {
@@ -126,13 +127,13 @@ port() {
 # Bring up required kappa services
 echo "Starting services ..."
 
-# Start elasticsearch cluster
+# Start elasticsearch 
 docker-compose up -d elasticsearch
 
-# Start elasticsearch cluster
+# Start kibana
 docker-compose up -d kibana
 
-# Start elasticsearch cluster
+# Start rabbitmq
 docker-compose up -d rabbitmq
 
 # docker-compose exec rabbitmq rabbitmqctl stop_app
@@ -157,7 +158,7 @@ fi
 docker-compose up -d filebeat
 
 # Start zookeeper if required
-grep "zookeeper:" docker-compose.yml > /dev/null
+grep "image: zookeeper" docker-compose.yml > /dev/null
 if [ $? -eq 0 ]; then
   docker-compose up -d zookeeper
   port "zookeeper" 2181 30

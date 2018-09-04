@@ -94,6 +94,7 @@ fi
 
 # Kafka
 sed "s/^.*KAFKA_BROKER_ID.*$/      - KAFKA_BROKER_ID=${node}/" compose/kafka.yml >> $file
+sed -i "s/hostname: kafka/hostname: kafka${node}/" $file
 if [ ${zoo_cluster} = "true" ]; then
   servers=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node.*=//" | sed "s/$/:2181/" | paste -s -d","`
   sed -i "s/^.*KAFKA_ZOOKEEPER_CONNECT.*$/      - KAFKA_ZOOKEEPER_CONNECT=${servers}/" $file
@@ -103,7 +104,7 @@ fi
 if [ $node -ne 1 ]; then
   sed -i -e '/depends_on:/,+1d' $file
 fi
-sed -i "s/^.*kafka:192.168.1.100.*$/      - \"kafka:${node1}\"/" $file
+sed -i "s/^.*kafka:192.168.1.100.*$/      - \"kafka${node}:${!whoami}\"/" $file
 
 # Kafka-manager
 sed "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=${node1}:2181/" compose/kafka-manager.yml >> $file

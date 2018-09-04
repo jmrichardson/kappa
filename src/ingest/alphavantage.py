@@ -9,7 +9,7 @@ from alpha_vantage.timeseries import TimeSeries
 # from alpha_vantage.cryptocurrencies import CryptoCurrencies
 
 # amqp://user:bitnami@192.168.1.100:5672//
-app = Celery('alphavantage', broker='amqp://user:bitnami@localhost//')
+app = Celery('alphavantage', broker='amqp://guest:guest@localhost//')
 
 
 @app.task
@@ -24,6 +24,7 @@ def getDailyAdjusted(symbol: "Equity ticker symbol"):
     config = configparser.ConfigParser()
     config.read("../config.ini")
     key = config.get("ingest.alphavantage", "key")
+    print(key)
     return key
     # ts = TimeSeries(key=key)
 

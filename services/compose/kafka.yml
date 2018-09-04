@@ -2,7 +2,7 @@
     container_name: kafka
     hostname: kafka
     network_mode: "host"
-    restart: unless-stopped
+    # restart: unless-stopped
     image: bitnami/kafka
     ports:
       - "9092:9092"

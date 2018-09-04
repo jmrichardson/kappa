@@ -2,7 +2,7 @@
     container_name: flower
     hostname: flower
     network_mode: "host"
-    restart: unless-stopped
+    # restart: unless-stopped
     image: "mher/flower:latest"
     environment:
       - CELERY_BROKER_URL=amqp://guest:guest@localhost:5672//

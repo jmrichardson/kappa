@@ -2,7 +2,7 @@
     container_name: rabbitmq
     hostname: rabbitmq
     network_mode: "host"
-    restart: unless-stopped
+    # restart: unless-stopped
     image: rabbitmq:3-management
     ports:
       - '4369:4369'

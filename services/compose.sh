@@ -71,8 +71,8 @@ sed "s/hostname: rabbitmq/hostname: rabbitmq${node}/" compose/rabbitmq.yml >> $f
 if [ ${node} -ne 1 ]; then
   echo "    volumes:" >> $file
   echo "      - ./rabbitmq/cluster-entrypoint.sh:/usr/local/bin/cluster-entrypoint.sh" >> $file
-  echo "    entrypoint:"
-  echo "      - sh"
+  echo "    entrypoint:" >> $file
+  echo "      - sh" >> $file
   echo "      - /usr/local/bin/cluster-entrypoint.sh" >> $file
 fi
 sed -i "s/^.*RABBITMQ_NODE_NAME.*$/      - RABBITMQ_NODE_NAME=rabbitmq@rabbitmq${node}/" $file

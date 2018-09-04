@@ -81,4 +81,4 @@ logs/*.log
 git.sh
 .env
 docker-compose.yml
-
+__pycache__/

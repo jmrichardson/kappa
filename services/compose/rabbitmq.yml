@@ -10,5 +10,7 @@
       - '15672:15672'
       - '25672:25672'
       - '35672:35672'
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
     environment:
       - RABBITMQ_ERLANG_COOKIE=secret

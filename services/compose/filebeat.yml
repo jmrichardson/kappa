@@ -9,7 +9,8 @@
       - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
       - ./filebeat/fields.yml:/usr/share/filebeat/fields.yml
       # Temporarily get news logs
-      - /home/kappa/packages/kappa_news/logs/:/var/log/kappa/
+      # - /home/kappa/packages/kappa_news/logs/:/var/log/kappa/
+      - /home/kappa/kappa/logs/:/var/log/kappa/
       - filebeat:/usr/share/filebeat/data/
     depends_on:
       - elasticsearch

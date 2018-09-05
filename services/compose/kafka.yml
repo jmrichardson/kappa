@@ -10,9 +10,9 @@
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_BROKER_ID=1
       - KAFKA_ZOOKEEPER_CONNECT=localhost:2181
+      - KAFKA_DELETE_TOPIC_ENABLE=true
     volumes:
       - kafka:/bitnami/kafka
     depends_on:
       - zookeeper
     extra_hosts:
-      - "kafka:192.168.1.100"

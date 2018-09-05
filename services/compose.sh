@@ -104,7 +104,7 @@ fi
 if [ $node -ne 1 ]; then
   sed -i -e '/depends_on:/,+1d' $file
 fi
-sed -i "s/^.*kafka:192.168.1.100.*$/      - \"kafka${node}:${!whoami}\"/" $file
+( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"kafka/" | sed "s/=/:/" | sed 's/$/"/' >> $file
 
 # Kafka-manager
 sed "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=${node1}:2181/" compose/kafka-manager.yml >> $file

@@ -11,3 +11,4 @@
       - APPLICATION_SECRET=letmein
     depends_on:
       - kafka
+    extra_hosts:

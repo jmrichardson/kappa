@@ -108,6 +108,7 @@ fi
 
 # Kafka-manager
 sed "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=${node1}:2181/" compose/kafka-manager.yml >> $file
+( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"kafka/" | sed "s/=/:/" | sed 's/$/"/' >> $file
 
 # Volumes
 cat compose/volumes.yml >> $file

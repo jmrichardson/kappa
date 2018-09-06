@@ -6,13 +6,13 @@
     image: bitnami/kafka
     ports:
       - "9092:9092"
-      - "9999:9999"
+      # - "9999:9999"
     environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_BROKER_ID=1
       - KAFKA_ZOOKEEPER_CONNECT=localhost:2181
       - KAFKA_DELETE_TOPIC_ENABLE=true
-      - JMX_PORT=9999
+      # - JMX_PORT=9999
     volumes:
       - kafka:/bitnami/kafka
     depends_on:

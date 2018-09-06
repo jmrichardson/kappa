@@ -2,6 +2,7 @@ import logplus
 import plac
 import configparser
 import json
+import uuid
 from kafka import KafkaProducer
 from celery import Celery
 from alpha_vantage.timeseries import TimeSeries
@@ -21,8 +22,11 @@ def getDailyAdjusted(symbol: "Equity ticker symbol"):
         symbol:  Symbol of equity
     """
 
+    # Create a unique id for this execution instance
+    uid = uuid.uuid4().hex.upper()[0:6]
+
     # Setup logging (Log file path and context arguments)
-    log = logplus.setup('../../logs/alphavantage.log', '../config/logging.yaml', symbol=symbol)
+    log = logplus.setup('../../../logs/alphavantage.log', '../../config/logging.yaml', symbol=symbol, uid=uid)
 
     # Total execution time
     log.info('Start ingest module Alphavantage: ' + symbol )
@@ -30,25 +34,25 @@ def getDailyAdjusted(symbol: "Equity ticker symbol"):
     # Get AV API user key
     config = configparser.ConfigParser()
     config.read("config.ini")
-    key = config.get("ingest.alphavantage", "key")
+    key = config.get("default", "key")
 
     # Get json string of daily adjusted values
     # ts = TimeSeries(key=key, output_format='pandas')
     ts = TimeSeries(key=key)
     data, meta_data = ts.get_daily_adjusted(symbol)
 
+    # Create producer to kafka topic
     producer = KafkaProducer(value_serializer=lambda v: json.dumps(v).encode('utf-8'), bootstrap_servers='192.168.1.100:9092')
 
-    # producer = KafkaProducer(bootstrap_servers='192.168.1.100:9092')
-    producer.send('daily_alphavantage', data)
+     # Append data to topic
+    log.info('Sending data to topic')
+    topic = config.get("default", "topic")
+    producer.send(topic, data)
 
-
-    # latest = data.tail(1)
-    # test = latest.to_json(orient="records")
-
-    # new = data.head(1)
-
-    # print(json.dumps(data))
+    # Close producer
+    log.info('Closing producer')
+    producer.flush()
+    producer.close()
 
 
 if __name__ == '__main__':

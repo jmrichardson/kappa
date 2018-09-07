@@ -1,0 +1,9 @@
+  monit:
+    image: vimagick/monit
+    hostname: monit
+    network_mode: "host"
+    ports:
+      - "2812:2812"
+    entrypoint: /etc/monit/entrypoint.sh
+    volumes:
+      - ./monit:/etc/monit

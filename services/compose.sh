@@ -17,7 +17,7 @@ node_count=`( set -o posix ; set ) | grep "^node[0-9]" | cut -d= -f2 | sort | un
 # Make sure my ip address is configured
 ifconfig -a | grep ${!whoami} > /dev/null
 if [ $? -ne 0 ]; then
-  echo "Error: whoami ip address is not configured on this host"
+  echo "Error: whoami ip address is not configured on this host. Verify env.sh"
   exit 2
 fi
 
@@ -48,35 +48,35 @@ services:
 DOC
 
 # Elastic Search
-cat compose/elasticsearch.yml >> $file
+cat yml/elasticsearch.yml >> $file
 echo "      - node1:${node1}" >> $file
 
 # Kibana
-cat compose/kibana.yml >> $file
+cat yml/kibana.yml >> $file
 
 # Filebeat
-cat compose/filebeat.yml >> $file
+cat yml/filebeat.yml >> $file
 
 # Rabbitmq
-sed "s/hostname: rabbitmq/hostname: rabbitmq${node}/" compose/rabbitmq.yml >> $file
+sed "s/hostname: rabbitmq/hostname: rabbitmq${node}/" yml/rabbitmq.yml >> $file
 # sed -i "s/^.*RABBITMQ_NODE_NAME.*$/      - RABBITMQ_NODE_NAME=rabbitmq@rabbitmq${node}/" $file
 ( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"rabbitmq/" | sed "s/=/:/" | sed 's/$/"/' >> $file
 
 # Flower
-cat compose/flower.yml >> $file
+cat yml/flower.yml >> $file
 
 # Zookeeper
 if [ ${zoo_cluster} = "true" ]; then
-  sed "s/^.*ZOO_MY_ID.*$/      - ZOO_MY_ID=${node}/" compose/zookeeper.yml >> $file
+  sed "s/^.*ZOO_MY_ID.*$/      - ZOO_MY_ID=${node}/" yml/zookeeper.yml >> $file
   servers=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/server./" | sed "s/$/:2888:3888;2181/" | paste -s -d" "`
   sed -i "s/^.*ZOO_SERVERS=.*$/      - ZOO_SERVERS=${servers}/" $file
 elif [ ${whoami} = "node1" ]; then
-  sed "s/^.*ZOO_MY_ID.*$/      - ZOO_MY_ID=${node}/" compose/zookeeper.yml >> $file
+  sed "s/^.*ZOO_MY_ID.*$/      - ZOO_MY_ID=${node}/" yml/zookeeper.yml >> $file
   sed -i "/ZOO_SERVERS/d" $file
 fi
 
 # Kafka
-sed "s/^.*KAFKA_BROKER_ID.*$/      - KAFKA_BROKER_ID=${node}/" compose/kafka.yml >> $file
+sed "s/^.*KAFKA_BROKER_ID.*$/      - KAFKA_BROKER_ID=${node}/" yml/kafka.yml >> $file
 sed -i "s/hostname: kafka/hostname: kafka${node}/" $file
 if [ ${zoo_cluster} = "true" ]; then
   servers=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node.*=//" | sed "s/$/:2181/" | paste -s -d","`
@@ -90,10 +90,13 @@ fi
 ( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"kafka/" | sed "s/=/:/" | sed 's/$/"/' >> $file
 
 # Kafka-manager
-sed "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=${node1}:2181/" compose/kafka-manager.yml >> $file
+sed "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=${node1}:2181/" yml/kafka-manager.yml >> $file
 ( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"kafka/" | sed "s/=/:/" | sed 's/$/"/' >> $file
 
+# Monit
+cat yml/monit.yml >> $file
+
 # Volumes
-cat compose/volumes.yml >> $file
+cat yml/volumes.yml >> $file
 
 echo -e "\ndocker-compose.yml created"

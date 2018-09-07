@@ -8,6 +8,15 @@ cd ${homeDir}
 # Get environment variables
 source env.sh
 
+
+for ip in `( set -o posix ; set ) | grep "^node[0-9]" | cut -d= -f2`
+do
+  ifconfig | grep $ip > /dev/null
+  if [ $? -eq 0 ]; then
+    whoami=`grep $ip env.sh | cut -d= -f1`
+  fi
+done
+
 # My node number
 node=`echo -n $whoami | tail -c 1`
 

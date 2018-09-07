@@ -12,5 +12,7 @@
       - '35672:35672'
     volumes:
       - rabbitmq:/var/lib/rabbitmq
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     environment:
       - RABBITMQ_ERLANG_COOKIE=secret
+    extra_hosts:

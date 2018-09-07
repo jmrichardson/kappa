@@ -59,15 +59,7 @@ cat compose/filebeat.yml >> $file
 
 # Rabbitmq
 sed "s/hostname: rabbitmq/hostname: rabbitmq${node}/" compose/rabbitmq.yml >> $file
-if [ ${node} -ne 1 ]; then
-  echo "    volumes:" >> $file
-  echo "      - ./rabbitmq/cluster-entrypoint.sh:/usr/local/bin/cluster-entrypoint.sh" >> $file
-  echo "    entrypoint:" >> $file
-  echo "      - sh" >> $file
-  echo "      - /usr/local/bin/cluster-entrypoint.sh" >> $file
-fi
-sed -i "s/^.*RABBITMQ_NODE_NAME.*$/      - RABBITMQ_NODE_NAME=rabbitmq@rabbitmq${node}/" $file
-echo "    extra_hosts:" >> $file
+# sed -i "s/^.*RABBITMQ_NODE_NAME.*$/      - RABBITMQ_NODE_NAME=rabbitmq@rabbitmq${node}/" $file
 ( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"rabbitmq/" | sed "s/=/:/" | sed 's/$/"/' >> $file
 
 # Flower

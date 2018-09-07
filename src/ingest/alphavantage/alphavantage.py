@@ -26,10 +26,10 @@ def getDailyAdjusted(symbol: "Equity ticker symbol"):
     uid = uuid.uuid4().hex.upper()[0:6]
 
     # Setup logging (Log file path and context arguments)
-    log = logplus.setup('../../../logs/alphavantage.log', '../../config/logging.yaml', symbol=symbol, uid=uid)
+    lp = logplus.setup('../../../logs/alphavantage.log', '../../config/logging.yaml', symbol=symbol, uid=uid)
 
     # Total execution time
-    log.info('Start ingest module Alphavantage: ' + symbol )
+    lp.info('Start ingest module Alphavantage: ' + symbol )
 
     # Get AV API user key
     config = configparser.ConfigParser()
@@ -45,12 +45,12 @@ def getDailyAdjusted(symbol: "Equity ticker symbol"):
     producer = KafkaProducer(value_serializer=lambda v: json.dumps(v).encode('utf-8'), bootstrap_servers='192.168.1.100:9092')
 
      # Append data to topic
-    log.info('Sending data to topic')
+    lp.info('Sending data to topic')
     topic = config.get("default", "topic")
     producer.send(topic, data)
 
     # Close producer
-    log.info('Closing producer')
+    lp.info('Closing producer')
     producer.flush()
     producer.close()
 

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Make sure script run as root
 if ! [ $(id -u) = 0 ]; then
    echo "Error: This script must be run as root (sudo)" 
@@ -11,6 +13,9 @@ if [ $? -ne 0 ]; then
   echo "vm.max_map_count=262144" >> /etc/sysctl.conf
   sysctl -w vm.max_map_count=262144
 fi
+
+# Add ubuntu repositories
+add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main universe restricted multiverse"
 
 # Install docker engine and docker-compose
 echo "Installing docerk engine"
@@ -33,17 +38,47 @@ chmod +x /usr/local/bin/docker-compose
 # Enable time sync
 timedatectl set-ntp on
 
-# Allow for sudo commands without password (allows for chronyd updates in cron)
-grep "NOPASSWD: ALL" /etc/sudoers > /dev/null
-if [ $? -ne 0 ]; then
-  echo "kappa ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+read -e -p "Setup cron time sync (yes/no): " -i "yes" ans
+if [ "$ans" = "yes" ]; then
+  # Allow for sudo commands without password (allows for chronyd updates in cron)
+  grep "NOPASSWD: ALL" /etc/sudoers > /dev/null
+  if [ $? -ne 0 ]; then
+    echo "kappa ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+  fi
+  
+  # Setup time sync every 5 minutes in chron
+  apt install -y chrony
+  if [ ! -f /var/spool/cron/crontabs/${SUDO_USER} ]; then
+    echo "*/5 * * * * sudo chronyd -q" >> /var/spool/cron/crontabs/${SUDO_USER}
+  fi
+  chronyd -q
 fi
 
-# Setup time sync every 5 minutes in chron
-apt install -y chrony
-if [ ! -f /var/spool/cron/crontabs/${SUDO_USER} ]; then
-  echo "*/5 * * * * sudo chronyd -q" >> /var/spool/cron/crontabs/${SUDO_USER}
-fi
-chronyd -q
+read -e -p "Setup smb share (yes/no): " -i "yes" ans
+if [ "$ans" = "yes" ]; then
 
+  apt install -y samba cifs-utils
+
+  grep "kappa" /etc/samba/smb.conf > /dev/null
+  if [ $? -ne 0 ]; then
+cat - << HERE >> /etc/samba/smb.conf
+[kappa]
+path = /home/kappa
+available = yes
+valid users = kappa
+read only = no
+browsable = yes
+public = yes
+writable = yes
+HERE
+  fi
+
+fi
+
+read -e -p "Install python dependencies (yes/no): " -i "yes" ans
+if [ "$ans" = "yes" ]; then
+  apt install -y python-pip
+  apt install -y python3-pip
+  apt install python-celery-common
+fi
 

@@ -40,8 +40,10 @@ if [ $? -ne 0 ]; then
 fi
 
 # Setup time sync every 5 minutes in chron
+apt install -y chrony
 if [ ! -f /var/spool/cron/crontabs/${SUDO_USER} ]; then
   echo "*/5 * * * * sudo chronyd -q" >> /var/spool/cron/crontabs/${SUDO_USER}
 fi
+chronyd -q
 
 

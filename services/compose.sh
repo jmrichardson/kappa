@@ -8,7 +8,6 @@ cd ${homeDir}
 # Get environment variables
 source env.sh
 
-
 for ip in `( set -o posix ; set ) | grep "^node[0-9]" | cut -d= -f2`
 do
   ifconfig | grep $ip > /dev/null
@@ -44,7 +43,6 @@ read -e -p "Create docker-compose.yml (yes/no): " -i "yes" create
 if [ "${create}" != "yes" ]; then
   exit
 fi
-
 
 # Docker compose file location
 file='docker-compose.yml'

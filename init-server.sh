@@ -14,15 +14,15 @@ fi
 
 # Install docker engine
 echo "Installing docerk engine"
-apt install apt-transport-https ca-certificates curl software-properties-common 
+apt install -y apt-transport-https ca-certificates curl software-properties-common 
 [ $? -ne 0 ] && echo "Error: Unable to add repository requisites" && exit 1
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - 
 [ $? -ne 0 ] && echo "Error: Unable to add repository key" && exit 1
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable" 
 [ $? -ne 0 ] && echo "Error: Unable to add repository" && exit 1
-apt update > /dev/null 2>/dev/null
+apt update -y 
 [ $? -ne 0 ] && echo "Error: Unable to update OS" && exit 1
-apt install docker-ce
+apt install -y docker-ce
 [ $? -ne 0 ] && echo "Error: Unable to install docker engine" && exit 1
 usermod -aG docker ${USER}
 [ $? -ne 0 ] && echo "Error: Unable to add user to docker group" && exit 1

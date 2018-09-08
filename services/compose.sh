@@ -15,6 +15,10 @@ do
     whoami=`grep $ip env.sh | cut -d= -f1`
   fi
 done
+if [ -z "$whoami" ]; then
+  echo "Error: Unable to detect IP address (check env.sh)"
+  exit 1
+fi
 
 # My node number
 node=`echo -n $whoami | tail -c 1`

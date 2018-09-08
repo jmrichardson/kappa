@@ -4,6 +4,6 @@
     network_mode: "host"
     ports:
       - "2812:2812"
-    entrypoint: /etc/monit/entrypoint.sh
+    entrypoint: /tmp/monit/entrypoint.sh
     volumes:
-      - ./monit:/etc/monit
+      - ./monit:/tmp/monit

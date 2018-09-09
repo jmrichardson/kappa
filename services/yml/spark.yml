@@ -4,7 +4,6 @@
     image: g051798/spark
     # build: spark/.
     network_mode: "host"
-    command: sbin/start-master.sh
     environment:
       - SPARK_CONF_DIR=/conf
       - SPARK_NO_DAEMONIZE=true

@@ -111,7 +111,7 @@ cat yml/monit.yml >> $file
 sed "s/hostname: .*/hostname: spark${node}/" yml/spark.yml >> $file
 ( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"spark/" | sed "s/=/:/" | sed 's/$/"/' >> $file
 if [ $node -ne 1 ]; then
-  sed -i "s/command: .*/command: sbin/start-slave spark://spark1:7077/" yml/spark.yml $file
+  sed -i "s!command: .*!command: sbin/start-slave spark://spark1:7077!" $file
 fi
 
 # Volumes

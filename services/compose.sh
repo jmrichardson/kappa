@@ -107,6 +107,13 @@ sed "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=${node1}:2181/" yml/kafka-
 # Monit
 cat yml/monit.yml >> $file
 
+# Spark
+sed "s/hostname: .*/hostname: spark${node}/" yml/spark.yml >> $file
+( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"spark/" | sed "s/=/:/" | sed 's/$/"/' >> $file
+if [ $node -ne 1 ]; then
+  sed -i "s/command: .*/command: sbin/start-slave spark://spark1:7077/" yml/spark.yml $file
+fi
+
 # Volumes
 cat yml/volumes.yml >> $file
 

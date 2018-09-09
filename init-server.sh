@@ -79,6 +79,6 @@ read -e -p "Install python dependencies (yes/no): " -i "yes" ans
 if [ "$ans" = "yes" ]; then
   apt install -y python-pip
   apt install -y python3-pip
-  apt install python-celery-common
+  apt install -y python-celery-common
 fi
 

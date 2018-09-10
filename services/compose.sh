@@ -112,6 +112,8 @@ sed "s/hostname: .*/hostname: spark${node}/" yml/spark.yml >> $file
 ( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"spark/" | sed "s/=/:/" | sed 's/$/"/' >> $file
 if [ $node -ne 1 ]; then
   echo "    command: sbin/start-slave.sh spark://spark1:7077" >> $file
+else
+  echo "    entrypoint: /conf/entrypoint.sh" >> $file
 fi
 
 # Volumes

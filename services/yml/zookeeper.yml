@@ -2,7 +2,6 @@
     container_name: zookeeper
     hostname: zookeeper
     network_mode: "host"
-    # restart: unless-stopped
     image: zookeeper:3.5
     ports:
       - "2181:2181"

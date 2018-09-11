@@ -1,12 +1,10 @@
   kafka:
     container_name: kafka
-    hostname: kafka
+    hostname: node1
     network_mode: "host"
-    # restart: unless-stopped
     image: bitnami/kafka
     ports:
       - "9092:9092"
-      # - "9999:9999"
     environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_BROKER_ID=1
@@ -17,4 +15,3 @@
       - kafka:/bitnami/kafka
     depends_on:
       - zookeeper
-    extra_hosts:

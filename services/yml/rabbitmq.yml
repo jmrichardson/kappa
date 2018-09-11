@@ -1,8 +1,7 @@
   rabbitmq:
     container_name: rabbitmq
-    hostname: rabbitmq
+    hostname: node1
     network_mode: "host"
-    # restart: unless-stopped
     image: rabbitmq:3-management
     ports:
       - '4369:4369'
@@ -15,4 +14,3 @@
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     environment:
       - RABBITMQ_ERLANG_COOKIE=secret
-    extra_hosts:

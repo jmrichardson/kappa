@@ -48,6 +48,10 @@ if [ "${create}" != "yes" ]; then
   exit
 fi
 
+# Host entries
+echo "    extra_hosts:" > yml/hosts.yml
+( set -o posix ; set ) | grep "^node[0-9]" |  sed "s/^/      - \"/" | sed "s/=/:/" | sed 's/$/"/' >> yml/hosts.yml
+
 # Docker compose file location
 file='docker-compose.yml'
 
@@ -59,65 +63,72 @@ services:
 DOC
 
 # Elastic Search
-cat yml/elasticsearch.yml >> $file
-echo "      - node1:${node1}" >> $file
+sed "s/hostname: .*/hostname: node${node}/" yml/elasticsearch.yml >> $file
+cat yml/hosts.yml >> $file
 
 # Kibana
-cat yml/kibana.yml >> $file
+sed "s/hostname: .*/hostname: node${node}/" yml/kibana.yml >> $file
+cat yml/hosts.yml >> $file
 
 # Filebeat
-cat yml/filebeat.yml >> $file
+sed "s/hostname: .*/hostname: node${node}/" yml/filebeat.yml >> $file
+cat yml/hosts.yml >> $file
 
 # Rabbitmq
-sed "s/hostname: rabbitmq/hostname: rabbitmq${node}/" yml/rabbitmq.yml >> $file
-# sed -i "s/^.*RABBITMQ_NODE_NAME.*$/      - RABBITMQ_NODE_NAME=rabbitmq@rabbitmq${node}/" $file
-( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"rabbitmq/" | sed "s/=/:/" | sed 's/$/"/' >> $file
+sed "s/hostname: .*/hostname: node${node}/" yml/rabbitmq.yml >> $file
+cat yml/hosts.yml >> $file
 
 # Flower
-cat yml/flower.yml >> $file
+sed "s/hostname: .*/hostname: node${node}/" yml/flower.yml >> $file
+cat yml/hosts.yml >> $file
 
 # Zookeeper
 if [ ${zoo_cluster} = "true" ]; then
-  sed "s/^.*ZOO_MY_ID.*$/      - ZOO_MY_ID=${node}/" yml/zookeeper.yml >> $file
-  servers=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/server./" | sed "s/$/:2888:3888;2181/" | paste -s -d" "`
+  sed "s/hostname: .*/hostname: node${node}/" yml/zookeeper.yml >> $file
+  sed -i "s/^.*ZOO_MY_ID.*$/      - ZOO_MY_ID=${node}/" $file
   sed -i "s/^.*ZOO_SERVERS=.*$/      - ZOO_SERVERS=${servers}/" $file
+  cat yml/hosts.yml >> $file
 elif [ ${whoami} = "node1" ]; then
-  sed "s/^.*ZOO_MY_ID.*$/      - ZOO_MY_ID=${node}/" yml/zookeeper.yml >> $file
+  sed "s/hostname: .*/hostname: node${node}/" yml/zookeeper.yml >> $file
+  sed -i "s/^.*ZOO_MY_ID.*$/      - ZOO_MY_ID=${node}/" $file
   sed -i "/ZOO_SERVERS/d" $file
+  cat yml/hosts.yml >> $file
 fi
 
 # Kafka
-sed "s/^.*KAFKA_BROKER_ID.*$/      - KAFKA_BROKER_ID=${node}/" yml/kafka.yml >> $file
-sed -i "s/hostname: kafka/hostname: kafka${node}/" $file
+sed "s/hostname: .*/hostname: node${node}/" yml/kafka.yml >> $file
+sed -i "s/^.*KAFKA_BROKER_ID.*$/      - KAFKA_BROKER_ID=${node}/" $file
 if [ ${zoo_cluster} = "true" ]; then
-  servers=`( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node.*=//" | sed "s/$/:2181/" | paste -s -d","`
   sed -i "s/^.*KAFKA_ZOOKEEPER_CONNECT.*$/      - KAFKA_ZOOKEEPER_CONNECT=${servers}/" $file
 else
-  sed -i "s/^.*KAFKA_ZOOKEEPER_CONNECT.*$/      - KAFKA_ZOOKEEPER_CONNECT=${node1}:2181/" $file
+  sed -i "s/^.*KAFKA_ZOOKEEPER_CONNECT.*$/      - KAFKA_ZOOKEEPER_CONNECT=node1:2181/" $file
 fi
 if [ $node -ne 1 ]; then
   sed -i -e '/depends_on:/,+1d' $file
 fi
-( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"kafka/" | sed "s/=/:/" | sed 's/$/"/' >> $file
+cat yml/hosts.yml >> $file
 
 # Kafka-manager
-sed "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=${node1}:2181/" yml/kafka-manager.yml >> $file
-( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"kafka/" | sed "s/=/:/" | sed 's/$/"/' >> $file
+sed "s/hostname: .*/hostname: node${node}/" yml/kafka-manager.yml >> $file
+sed -i "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=node1:2181/" $file
 
 # Monit
-cat yml/monit.yml >> $file
+sed "s/hostname: .*/hostname: node${node}/" yml/monit.yml >> $file
+cat yml/hosts.yml >> $file
 
 # Spark
-sed "s/hostname: .*/hostname: spark${node}/" yml/spark.yml >> $file
-( set -o posix ; set ) | grep "^node[0-9]" | sed "s/node/      - \"spark/" | sed "s/=/:/" | sed 's/$/"/' >> $file
+sed "s/hostname: .*/hostname: node${node}/" yml/spark.yml >> $file
 if [ $node -ne 1 ]; then
-  echo "    command: sbin/start-slave.sh spark://spark1:7077" >> $file
+  echo "    command: sbin/start-slave.sh spark://node1:7077" >> $file
 else
   echo "    entrypoint: /conf/entrypoint.sh" >> $file
 fi
+cat yml/hosts.yml >> $file
 
+# Jupyter
 if [ $node -eq 1 ]; then
-  cat yml/jupyter.yml >> $file
+  sed "s/hostname: .*/hostname: node${node}/" yml/jupyter.yml >> $file
+  cat yml/hosts.yml >> $file
 fi
 
 # Volumes

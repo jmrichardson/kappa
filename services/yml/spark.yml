@@ -1,8 +1,8 @@
   spark:
     container_name: spark
     hostname: spark1
-    image: g051798/spark
-    # build: spark/.
+    # image: g051798/spark
+    build: spark/.
     network_mode: "host"
     environment:
       - SPARK_CONF_DIR=/conf
@@ -15,4 +15,3 @@
       - 8081:8081
     volumes:
       - ./spark/conf:/conf
-    extra_hosts:

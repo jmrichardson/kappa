@@ -1,6 +1,6 @@
   monit:
     image: vimagick/monit
-    hostname: monit
+    hostname: node1
     container_name: monit
     network_mode: "host"
     ports:

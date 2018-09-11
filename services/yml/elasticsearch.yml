@@ -1,9 +1,8 @@
   elasticsearch:
     container_name: elasticsearch
-    hostname: elasticsearch
+    hostname: node1
     image: "docker.elastic.co/elasticsearch/elasticsearch:6.4.0"
     network_mode: "host"
-    # restart: unless-stopped
     environment:
       - cluster.name=kappa
       - network.host=0.0.0.0
@@ -19,4 +18,3 @@
     ports:
       - '9200:9200'
       - '9300:9300'
-    extra_hosts:

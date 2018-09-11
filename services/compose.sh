@@ -116,6 +116,10 @@ else
   echo "    entrypoint: /conf/entrypoint.sh" >> $file
 fi
 
+if [ $node -eq 1 ]; then
+  cat yml/jupyter.yml >> $file
+fi
+
 # Volumes
 cat yml/volumes.yml >> $file
 

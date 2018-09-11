@@ -1,14 +1,9 @@
 FROM openjdk
 MAINTAINER John Richardson
 
-# ENV PYTHONHASHSEED 0
-# ENV PYTHONIOENCODING UTF-8
-# ENV PIP_DISABLE_PIP_VERSION_CHECK 1
-
-RUN apt-get update \
- && apt-get install -y curl unzip \
-    python3 python3-setuptools \
-    vim
+RUN apt-get update 
+RUN apt-get install -y curl unzip
+RUN apt-get install -y vim
 
 # Hadoop
 ENV HADOOP_VERSION 3.0.0
@@ -34,6 +29,11 @@ RUN curl -sL --retry 3 \
   | tar x -C /usr/ \
  && mv /usr/$SPARK_PACKAGE $SPARK_HOME \
  && chown -R root:root $SPARK_HOME
+
+# Python3
+RUN apt-get install -y python3.6 python3-setuptools 
+RUN rm /usr/bin/python
+RUN ln -s /usr/bin/python3 /usr/bin/python
 
 WORKDIR $SPARK_HOME
 CMD ["sbin/start-master.sh"]

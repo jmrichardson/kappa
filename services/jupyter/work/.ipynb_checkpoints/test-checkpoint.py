@@ -1,32 +1,38 @@
 {
  "cells": [
   {
-   "cell_type": "code",
-   "execution_count": 1,
+   "cell_type": "markdown",
    "metadata": {},
-   "outputs": [],
    "source": [
-    "from pyspark import SparkConf\n",
-    "from pyspark import SparkContext"
+    "Import pyspark"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": 12,
    "metadata": {},
    "outputs": [],
    "source": [
-    "conf = SparkConf()\n",
-    "conf.setMaster('spark://192.168.1.100:7077')\n",
-    "conf.setAppName('spark-basic')\n",
-    "sc = SparkContext(conf=conf)"
+    "from pyspark import SparkContext\n",
+    "sc = SparkContext(master='spark://192.168.1.100:7077', appName='test')"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 13,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "4999999950000000.0"
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "rdd = sc.parallelize(range(100000000))\n",
     "rdd.sumApprox(3)"
@@ -34,10 +40,12 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 26,
    "metadata": {},
    "outputs": [],
-   "source": []
+   "source": [
+    "sc.stop()"
+   ]
   }
  ],
  "metadata": {

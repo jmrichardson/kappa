@@ -3,6 +3,8 @@
     hostname: jupyter
     network_mode: "host"
     image: "jupyter/all-spark-notebook"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
     ports:
       - '8888:8888'
     volumes:

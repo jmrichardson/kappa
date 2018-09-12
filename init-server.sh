@@ -82,8 +82,8 @@ fi
 
 read -e -p "Install python dependencies (yes/no): " -i "yes" ans
 if [ "$ans" = "yes" ]; then
-  apt install -y python-pip
-  apt install -y python3-pip
-  apt install -y python-celery-common
+  apt install -y python3.6 python3-setuptools python3-pip
+  rm /usr/bin/python
+  ln -s /usr/bin/python3 /usr/bin/python 
 fi
 

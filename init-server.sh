@@ -6,6 +6,13 @@ if ! [ $(id -u) = 0 ]; then
    exit 1
 fi
 
+read -e -p "Setup cron time sync (yes/no): " -i "cron" ans
+read -e -p "Setup smb share (yes/no): " -i "yes" smb
+read -e -p "Install python dependencies (yes/no): " -i "yes" python
+read -e -p "Reboot after installation (yes/no): " -i "yes" reboot
+
+echo "alias dc='docker-compose'" >> ~/.bashrc
+
 # Configure ES vm max
 echo "Configuring Elasticsearch vm max" 
 grep "262144" /etc/sysctl.conf > /dev/null
@@ -43,8 +50,7 @@ chown ${SUDO_USER}:${SUDO_USER} /data
 # Enable time sync
 timedatectl set-ntp on
 
-read -e -p "Setup cron time sync (yes/no): " -i "yes" ans
-if [ "$ans" = "yes" ]; then
+if [ "$cron" = "yes" ]; then
   # Allow for sudo commands without password (allows for chronyd updates in cron)
   grep "NOPASSWD: ALL" /etc/sudoers > /dev/null
   if [ $? -ne 0 ]; then
@@ -59,8 +65,7 @@ if [ "$ans" = "yes" ]; then
   chronyd -q
 fi
 
-read -e -p "Setup smb share (yes/no): " -i "yes" ans
-if [ "$ans" = "yes" ]; then
+if [ "$smb" = "yes" ]; then
 
   apt install -y samba cifs-utils
 
@@ -80,10 +85,12 @@ HERE
 
 fi
 
-read -e -p "Install python dependencies (yes/no): " -i "yes" ans
-if [ "$ans" = "yes" ]; then
+if [ "$python" = "yes" ]; then
   apt install -y python3.6 python3-setuptools python3-pip
   rm /usr/bin/python
   ln -s /usr/bin/python3 /usr/bin/python 
 fi
 
+if [ "$reboot" = "yes" ]; then
+  reboot
+fi

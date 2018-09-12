@@ -5,7 +5,5 @@
     image: "docker.elastic.co/kibana/kibana:6.4.0"
     environment:
       - ELASTICSEARCH_URL=http://localhost:9200
-    ports:
-      - '5601:5601'
     depends_on:
       - elasticsearch

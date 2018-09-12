@@ -1,12 +1,11 @@
   jupyter:
     container_name: jupyter
     hostname: jupyter
+    # command: 
     network_mode: "host"
     image: "jupyter/all-spark-notebook"
     environment:
       - JUPYTER_ENABLE_LAB=yes
-    ports:
-      - '8888:8888'
     volumes:
-      - ./jupyter/work:/home/jovyan/work
+      - /data:/data
       - ./jupyter/jupyter:/home/jovyan/.jupyter

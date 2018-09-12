@@ -3,12 +3,6 @@
     hostname: node1
     network_mode: "host"
     image: rabbitmq:3-management
-    ports:
-      - '4369:4369'
-      - '5672:5672'
-      - '15672:15672'
-      - '25672:25672'
-      - '35672:35672'
     volumes:
       - rabbitmq:/var/lib/rabbitmq
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf

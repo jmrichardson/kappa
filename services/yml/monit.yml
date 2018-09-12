@@ -3,8 +3,6 @@
     hostname: node1
     container_name: monit
     network_mode: "host"
-    ports:
-      - "2812:2812"
     entrypoint: /tmp/monit/entrypoint.sh
     volumes:
       - ./monit:/tmp/monit

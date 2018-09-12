@@ -35,6 +35,11 @@ curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compos
 [ $? -ne 0 ] && echo "Error: Unable to install docker-compose" && exit 1
 chmod +x /usr/local/bin/docker-compose
 
+# Install NFS client
+apt install -y rpcbind nfs-common nfs4-acl-tools
+mkdir /data
+chown ${SUDO_USER}:${SUDO_USER} /data
+
 # Enable time sync
 timedatectl set-ntp on
 

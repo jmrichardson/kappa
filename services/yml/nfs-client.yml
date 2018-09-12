@@ -1,0 +1,11 @@
+  nfs:
+    image: outstand/nfs-client
+    hostname: node1
+    container_name: nfs
+    network_mode: "host"
+    privileged: true
+    environment:
+      - SERVER=node1
+      - MOUNTPOINT=/data
+    volumes:
+      - /data:/data

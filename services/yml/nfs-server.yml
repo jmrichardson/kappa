@@ -1,0 +1,10 @@
+  nfs:
+    image: itsthenetwork/nfs-server-alpine
+    hostname: node1
+    container_name: nfs
+    network_mode: "host"
+    privileged: true
+    environment:
+      - SHARED_DIRECTORY=/data
+    volumes:
+      - /data:/data

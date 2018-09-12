@@ -78,6 +78,7 @@ $RECYCLE.BIN/
 logs/*.log
 .idea/
 *.swp
+*.gz
 git.sh
 .env
 docker-compose.yml

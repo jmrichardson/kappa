@@ -127,7 +127,16 @@ cat yml/hosts.yml >> $file
 
 # Jupyter
 if [ $node -eq 1 ]; then
-  sed "s/hostname: .*/hostname: node${node}/" yml/jupyter.yml >> $file
+  sed "s/hostname: .*/hostname: node1/" yml/jupyter.yml >> $file
+  cat yml/hosts.yml >> $file
+fi
+
+# NFS 
+if [ $node -eq 1 ]; then
+  sed "s/hostname: .*/hostname: node1/" yml/nfs-server.yml >> $file
+  cat yml/hosts.yml >> $file
+else
+  sed "s/hostname: .*/hostname: node${node}/" yml/nfs-client.yml >> $file
   cat yml/hosts.yml >> $file
 fi
 

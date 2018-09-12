@@ -9,3 +9,4 @@
       - SPARK_NO_DAEMONIZE=true
     volumes:
       - ./spark/conf:/conf
+      - /data:/data

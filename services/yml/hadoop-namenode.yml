@@ -1,0 +1,11 @@
+  hadoop-namenode:
+    container_name: hadoop-namenode
+    hostname: node1
+    image: bde2020/hadoop-namenode
+    network_mode: "host"
+    environment:
+      - CLUSTER_NAME=kappa
+    env_file:
+      - ./hadoop/hadoop.env
+    volumes:
+      - hdfs:/hadoop/dfs/name

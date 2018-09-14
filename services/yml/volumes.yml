@@ -9,3 +9,5 @@ volumes:
     driver: local
   rabbitmq:
     driver: local
+  hdfs:
+    driver: local

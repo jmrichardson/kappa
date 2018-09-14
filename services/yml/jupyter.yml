@@ -7,5 +7,7 @@
     environment:
       - JUPYTER_ENABLE_LAB=yes
     volumes:
-      - /data:/data
+      - /nfs:/nfs
       - ./jupyter/jupyter:/home/jovyan/.jupyter
+      - ./jupyter/spark-streaming-kafka-0-8-assembly_2.11-2.3.1.jar:/usr/local/spark/jars/spark-streaming-kafka-0-8-assembly_2.11-2.3.1.jar
+      - ./jupyter/kafka-clients-2.0.0.jar:/usr/local/spark/jars/kafka-clients-2.0.0.jar

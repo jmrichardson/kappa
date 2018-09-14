@@ -116,6 +116,27 @@ sed -i "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=node1:2181/" $file
 sed "s/hostname: .*/hostname: node${node}/" yml/monit.yml >> $file
 cat yml/hosts.yml >> $file
 
+
+
+# NFS 
+if [ $node -eq 1 ]; then
+  sed "s/hostname: .*/hostname: node1/" yml/nfs.yml >> $file
+  cat yml/hosts.yml >> $file
+fi
+
+# Hadoop
+if [ $node -eq 1 ]; then
+  sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-namenode.yml >> $file
+  cat yml/hosts.yml >> $file
+  sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-datanode.yml >> $file
+  cat yml/hosts.yml >> $file
+else
+  sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-datanode.yml >> $file
+  cat yml/hosts.yml >> $file
+fi
+
+
+
 # Spark
 sed "s/hostname: .*/hostname: node${node}/" yml/spark.yml >> $file
 if [ $node -ne 1 ]; then
@@ -125,15 +146,11 @@ else
 fi
 cat yml/hosts.yml >> $file
 
+
+
 # Jupyter
 if [ $node -eq 1 ]; then
   sed "s/hostname: .*/hostname: node1/" yml/jupyter.yml >> $file
-  cat yml/hosts.yml >> $file
-fi
-
-# NFS 
-if [ $node -eq 1 ]; then
-  sed "s/hostname: .*/hostname: node1/" yml/nfs.yml >> $file
   cat yml/hosts.yml >> $file
 fi
 

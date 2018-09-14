@@ -1,0 +1,11 @@
+  hadoop-datanode:
+    container_name: hadoop-datanode
+    hostname: node1
+    image: bde2020/hadoop-datanode
+    network_mode: "host"
+    env_file:
+      - ./hadoop/hadoop.env
+    volumes:
+      - /hdfs:/hadoop/dfs/data
+    depends_on: 
+      - hadoop-namenode

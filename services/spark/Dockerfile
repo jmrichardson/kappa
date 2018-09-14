@@ -36,7 +36,7 @@ RUN rm /usr/bin/python
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 # Spark dependencies (kafka)
-COPY *.jar /usr/spark-2.3.1/jars/
+# COPY *.jar /usr/spark-2.3.1/jars/
 
 WORKDIR $SPARK_HOME
 CMD ["sbin/start-master.sh"]

@@ -1,0 +1,13 @@
+  mysql:
+    image: mysql
+    hostname: node1
+    container_name: mysql
+    network_mode: "host"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=kappa
+      - MYSQL_PASSWORD=kappa
+      - MYSQL_DATABASE=metastore
+    volumes:
+      - mysql:/var/lib/mysql
+      - ./hadoop/hive/hive-schema-3.1.0.mysql.sql:/docker-entrypoint-initdb.d/hive-schema-3.1.0.mysql.sql

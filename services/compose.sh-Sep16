@@ -71,16 +71,16 @@ sed "s/hostname: .*/hostname: node${node}/" yml/kibana.yml >> $file
 cat yml/hosts.yml >> $file
 
 # Filebeat
-### sed "s/hostname: .*/hostname: node${node}/" yml/filebeat.yml >> $file
-### cat yml/hosts.yml >> $file
+sed "s/hostname: .*/hostname: node${node}/" yml/filebeat.yml >> $file
+cat yml/hosts.yml >> $file
 
 # Rabbitmq
-### sed "s/hostname: .*/hostname: node${node}/" yml/rabbitmq.yml >> $file
-### cat yml/hosts.yml >> $file
+sed "s/hostname: .*/hostname: node${node}/" yml/rabbitmq.yml >> $file
+cat yml/hosts.yml >> $file
 
 # Flower
-### sed "s/hostname: .*/hostname: node${node}/" yml/flower.yml >> $file
-### cat yml/hosts.yml >> $file
+sed "s/hostname: .*/hostname: node${node}/" yml/flower.yml >> $file
+cat yml/hosts.yml >> $file
 
 # Zookeeper
 if [ ${zoo_cluster} = "true" ]; then
@@ -96,25 +96,25 @@ elif [ ${whoami} = "node1" ]; then
 fi
 
 # Kafka
-### sed "s/hostname: .*/hostname: node${node}/" yml/kafka.yml >> $file
-### sed -i "s/^.*KAFKA_BROKER_ID.*$/      - KAFKA_BROKER_ID=${node}/" $file
-### if [ ${zoo_cluster} = "true" ]; then
-  ### sed -i "s/^.*KAFKA_ZOOKEEPER_CONNECT.*$/      - KAFKA_ZOOKEEPER_CONNECT=${servers}/" $file
-### else
-  ### sed -i "s/^.*KAFKA_ZOOKEEPER_CONNECT.*$/      - KAFKA_ZOOKEEPER_CONNECT=node1:2181/" $file
-### fi
-### if [ $node -ne 1 ]; then
-  ### sed -i -e '/depends_on:/,+1d' $file
-### fi
-### cat yml/hosts.yml >> $file
-### 
-### # Kafka-manager
-### sed "s/hostname: .*/hostname: node${node}/" yml/kafka-manager.yml >> $file
-### sed -i "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=node1:2181/" $file
+sed "s/hostname: .*/hostname: node${node}/" yml/kafka.yml >> $file
+sed -i "s/^.*KAFKA_BROKER_ID.*$/      - KAFKA_BROKER_ID=${node}/" $file
+if [ ${zoo_cluster} = "true" ]; then
+  sed -i "s/^.*KAFKA_ZOOKEEPER_CONNECT.*$/      - KAFKA_ZOOKEEPER_CONNECT=${servers}/" $file
+else
+  sed -i "s/^.*KAFKA_ZOOKEEPER_CONNECT.*$/      - KAFKA_ZOOKEEPER_CONNECT=node1:2181/" $file
+fi
+if [ $node -ne 1 ]; then
+  sed -i -e '/depends_on:/,+1d' $file
+fi
+cat yml/hosts.yml >> $file
+
+# Kafka-manager
+sed "s/hostname: .*/hostname: node${node}/" yml/kafka-manager.yml >> $file
+sed -i "s/^.*ZK_HOSTS=localhost:2181.*$/      - ZK_HOSTS=node1:2181/" $file
 
 # Monit
-### sed "s/hostname: .*/hostname: node${node}/" yml/monit.yml >> $file
-### cat yml/hosts.yml >> $file
+sed "s/hostname: .*/hostname: node${node}/" yml/monit.yml >> $file
+cat yml/hosts.yml >> $file
 
 
 
@@ -126,15 +126,17 @@ fi
 
 # Hadoop
 if [ $node -eq 1 ]; then
-  cat yml/hadoop-common.yml >> $file
   sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-namenode.yml >> $file
   cat yml/hosts.yml >> $file
   sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-datanode.yml >> $file
   cat yml/hosts.yml >> $file
   sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-hive.yml >> $file
   cat yml/hosts.yml >> $file
+  sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-hive-metastore.yml >> $file
+  cat yml/hosts.yml >> $file
+  sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-hive-metastore-postgresql.yml >> $file
+  cat yml/hosts.yml >> $file
 else
-  cat yml/hadoop-common.yml >> $file
   sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-datanode.yml >> $file
   cat yml/hosts.yml >> $file
 fi
@@ -153,21 +155,15 @@ cat yml/hosts.yml >> $file
 
 
 # Jupyter
-### if [ $node -eq 1 ]; then
-  ### sed "s/hostname: .*/hostname: node1/" yml/jupyter.yml >> $file
-  ### cat yml/hosts.yml >> $file
-### fi
+if [ $node -eq 1 ]; then
+  sed "s/hostname: .*/hostname: node1/" yml/jupyter.yml >> $file
+  cat yml/hosts.yml >> $file
+fi
 
 
 # ActiveMQ
 if [ $node -eq 1 ]; then
   sed "s/hostname: .*/hostname: node1/" yml/activemq.yml >> $file
-  cat yml/hosts.yml >> $file
-fi
-
-# Mysql
-if [ $node -eq 1 ]; then
-  sed "s/hostname: .*/hostname: node1/" yml/mysql.yml >> $file
   cat yml/hosts.yml >> $file
 fi
 

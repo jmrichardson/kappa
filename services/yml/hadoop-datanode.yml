@@ -1,11 +1,10 @@
   hadoop-datanode:
     container_name: hadoop-datanode
     hostname: node1
-    image: bde2020/hadoop-datanode
+    build: ./hadoop/datanode/.
+    image: hadoop-datanode
     network_mode: "host"
-    env_file:
-      - ./hadoop/hadoop.env
     volumes:
-      - /hdfs:/hadoop/dfs/data
-    depends_on: 
-      - hadoop-namenode
+      - ./hadoop/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+      - ./hadoop/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+      - datanode:/opt/hadoop/data/data

@@ -1,12 +1,12 @@
   spark:
     container_name: spark
     hostname: spark1
-    # image: g051798/spark
     build: spark/.
+    image: spark
     network_mode: "host"
     environment:
       - SPARK_CONF_DIR=/conf
       - SPARK_NO_DAEMONIZE=true
     volumes:
       - ./spark/conf:/conf
-      - /data:/data
+      - /nfs:/nfs

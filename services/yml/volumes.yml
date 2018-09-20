@@ -9,5 +9,11 @@ volumes:
     driver: local
   rabbitmq:
     driver: local
-  hdfs:
+  namenode:
+    driver: local
+  datanode:
+    driver: local
+  activemq:
+    driver: local
+  mysql:
     driver: local

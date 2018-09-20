@@ -1,10 +1,10 @@
-  hadoop-namenode:
-    container_name: hadoop-namenode
+  hadoop-hive:
+    container_name: hadoop-hive
     hostname: node1
-    build: ./hadoop/namenode/.
-    image: hadoop-namenode
+    build: ./hadoop/hive/.
+    image: hadoop-hive
     network_mode: "host"
     volumes:
       - ./hadoop/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
       - ./hadoop/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
-      - namenode:/opt/hadoop/data/name
+      - ./hadoop/hive-env.sh:/opt/hive/conf/hive-env.sh

@@ -1,0 +1,10 @@
+  activemq:
+    image: webcenter/activemq
+    hostname: node1
+    container_name: activemq
+    network_mode: "host"
+    environment:
+      - "ACTIVEMQ_CONFIG_MINMEMORY=512"
+      - "ACTIVEMQ_CONFIG_MAXMEMORY=2048"
+    volumes:
+      - activemq:/data

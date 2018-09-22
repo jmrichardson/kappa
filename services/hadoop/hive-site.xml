@@ -1,7 +1,7 @@
 <configuration>
    <property>
       <name>javax.jdo.option.ConnectionURL</name>
-      <value>jdbc:mysql://node1/metastore?createDatabaseIfNotExist=true</value>
+      <value>jdbc:mysql://localhost/metastore?useSSL=false</value>
       <description>metadata is stored in a MySQL server</description>
    </property>
    <property>
@@ -18,5 +18,15 @@
       <name>javax.jdo.option.ConnectionPassword</name>
       <value>kappa</value>
       <description>password for connecting to mysql server</description>
+   </property>
+   <property>
+      <name>hive.metastore.schema.verification</name>
+      <value>false</value>
+      <description>connection from Spark</description>
+   </property>
+   <property>
+      <name>hive.metastore.warehouse.dir</name>
+      <value>hdfs://node1:8020/user/hive/warehouse</value>
+      <description>Warehouse Location</description>
    </property>
 </configuration>

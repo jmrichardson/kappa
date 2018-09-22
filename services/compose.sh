@@ -126,15 +126,12 @@ fi
 
 # Hadoop
 if [ $node -eq 1 ]; then
-  cat yml/hadoop-common.yml >> $file
-  sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-namenode.yml >> $file
-  cat yml/hosts.yml >> $file
-  sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-datanode.yml >> $file
+  cat yml/hadoop.yml >> $file
   cat yml/hosts.yml >> $file
   sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-hive.yml >> $file
   cat yml/hosts.yml >> $file
 else
-  cat yml/hadoop-common.yml >> $file
+  cat yml/hadoop.yml >> $file
   sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-datanode.yml >> $file
   cat yml/hosts.yml >> $file
 fi

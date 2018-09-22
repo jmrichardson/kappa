@@ -1,11 +1,8 @@
-FROM openjdk
+FROM openjdk:8u181-jdk-stretch
 MAINTAINER John Richardson
 
 RUN apt-get update 
-RUN apt-get install -y curl unzip
-RUN apt-get install -y vim
-
-ENV JAVA_HOME=/usr/lib/jvm/java-10-openjdk-amd64
+RUN apt-get install -y curl unzip vim supervisor
 
 # Hadoop
 ENV HADOOP_VERSION 3.1.1
@@ -32,4 +29,12 @@ RUN rm -rf $HADOOP_HOME/share/doc
 RUN chown -R root:root $HADOOP_HOME
 RUN mkdir -p ${HADOOP_HOME}/data/name
 RUN mkdir -p ${HADOOP_HOME}/data/data
+
+ENV HDFS_NAMENODE_USER root
+ENV HDFS_DATANODE_USER root
+ENV HDFS_SECONDARYNAMENODE_USER root
+ENV YARN_RESOURCEMANAGER_USER root
+ENV YARN_NODEMANAGER_USER root
+
+CMD ["/usr/bin/supervisord"]
 

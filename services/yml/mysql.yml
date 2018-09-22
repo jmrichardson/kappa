@@ -1,5 +1,5 @@
   mysql:
-    image: mysql
+    image: mysql:5.7
     hostname: node1
     container_name: mysql
     network_mode: "host"

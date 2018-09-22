@@ -1,5 +1,0 @@
-  hadoop-common:
-    container_name: hadoop-common
-    hostname: node1
-    build: ./hadoop/common/.
-    image: hadoop-common

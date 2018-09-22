@@ -1,4 +1,4 @@
-FROM hadoop-common
+FROM hadoop
 MAINTAINER John Richardson
 
 ENV HIVE_VERSION 3.1.0
@@ -22,8 +22,10 @@ RUN wget https://archive.apache.org/dist/hive/hive-$HIVE_VERSION/apache-hive-$HI
 # RUN mv mariadb-${MARIADB_VERSION} mariadb
 
 # Mysql java connector
-RUN apt-get install -y libmysql-java
-RUN ln -s /usr/share/java/mysql-connector-java.jar $HIVE_HOME/lib/mysql-connector-java.jar
+RUN wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java_8.0.12-1debian9_all.deb
+RUN dpkg -i mysql-connector-java_8.0.12-1debian9_all.deb
+RUN ln -s /usr/share/java/mysql-connector-java-8.0.12.jar  $HIVE_HOME/lib/mysql-connector-java.jar
+RUN rm mysql-connector-java_8.0.12-1debian9_all.deb
 
 
 #Spark should be compiled with Hive to be able to use it

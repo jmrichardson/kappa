@@ -42,6 +42,19 @@ curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compos
 [ $? -ne 0 ] && echo "Error: Unable to install docker-compose" && exit 1
 chmod +x /usr/local/bin/docker-compose
 
+
+# Build hadoop-common image
+docker build -t hadoop-common /home/kappa/kappa/services/hadoop/common/.
+
+# Setup SSH keys
+sudo -H -u kappa bash -c 'ssh-keygen -N "" -f ~/.ssh/id_rsa'
+
+
+# Add node1, node2, etc  to /etc/hosts for name resolution
+### TODO programatically add to host file
+# https://www.digitalocean.com/community/tutorials/how-to-spin-up-a-hadoop-cluster-with-digitalocean-droplets
+
+
 # Install NFS client
 apt install -y rpcbind nfs-common nfs4-acl-tools
 mkdir /data

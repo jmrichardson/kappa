@@ -1,0 +1,7 @@
+  nifi:
+    image: apache/nifi
+    hostname: node1
+    container_name: nifi
+    network_mode: "host"
+    environment:
+      - NIFI_WEB_HTTP_PORT='9090'

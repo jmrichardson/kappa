@@ -4,13 +4,7 @@
     build: ./hadoop/.
     image: hadoop
     network_mode: "host"
+    entrypoint: /entrypoint.sh
     volumes:
-      - ./hadoop/hadoop-env.sh:/opt/hadoop/etc/hadoop/hadoop-env.sh
-      - ./hadoop/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
-      - ./hadoop/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
-      - ./hadoop/yarn-site.xml:/opt/hadoop/etc/hadoop/yarn-site.xml
-      - ./hadoop/mapred-site.xml:/opt/hadoop/etc/hadoop/mapred-site.xml
-      - ./hadoop/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
-      - ./hadoop/setup.sh:/tmp/setup.sh
       - namenode:/opt/hadoop/data/name
       - datanode:/opt/hadoop/data/data

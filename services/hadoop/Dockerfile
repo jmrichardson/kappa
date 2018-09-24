@@ -1,8 +1,10 @@
-FROM openjdk:8u181-jdk-stretch
+FROM ubuntu:16.04
 MAINTAINER John Richardson
 
-RUN apt-get update 
-RUN apt-get install -y curl unzip vim supervisor
+RUN apt update && apt upgrade
+RUN apt-get install -y curl unzip vim supervisor wget default-jre
+
+ENV JAVA_HOME /usr/lib/jvm/default-java
 
 # Hadoop
 ENV HADOOP_VERSION 3.1.1
@@ -18,6 +20,13 @@ ENV HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
 ENV PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 ENV JAVA_LIBRARY_PATH=${HADOOP_HOME}/lib/native/
 ENV LD_LIBRARY_PATH=${HADOOP_HOME}/lib/native
+ENV HIVE_VERSION 3.1.0
+ENV MARIADB_VERSION 10.2.17
+ENV HIVE_HOME /opt/hive
+ENV HIVE_CONF_DIR=/opt/hive/conf
+ENV PATH $HIVE_HOME/bin:$PATH
+ENV CLASSPATH=$CLASSPATH:${HADOOP_HOME}/lib/*:.
+ENV CLASSPATH=$CLASSPATH:${HIVE_HOME}/lib/*:.
 
 RUN curl -sL --retry 3 \
   "http://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz" \
@@ -35,6 +44,3 @@ ENV HDFS_DATANODE_USER root
 ENV HDFS_SECONDARYNAMENODE_USER root
 ENV YARN_RESOURCEMANAGER_USER root
 ENV YARN_NODEMANAGER_USER root
-
-CMD ["/usr/bin/supervisord"]
-

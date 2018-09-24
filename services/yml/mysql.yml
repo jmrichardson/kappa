@@ -10,4 +10,4 @@
       - MYSQL_DATABASE=metastore
     volumes:
       - mysql:/var/lib/mysql
-      - ./hadoop/hive/hive-schema-3.1.0.mysql.sql:/docker-entrypoint-initdb.d/hive-schema-3.1.0.mysql.sql
+      - ./hive/hive-schema-3.1.0.mysql.sql:/docker-entrypoint-initdb.d/hive-schema-3.1.0.mysql.sql

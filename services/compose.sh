@@ -127,8 +127,13 @@ fi
 # Hadoop
 if [ $node -eq 1 ]; then
   cat yml/hadoop.yml >> $file
+  cat yml/hadoop-volumes.yml >> $file
   cat yml/hosts.yml >> $file
-  sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-hive.yml >> $file
+  sed "s/hostname: .*/hostname: node${node}/" yml/hive.yml >> $file
+  cat yml/hadoop-volumes.yml >> $file
+  cat yml/hosts.yml >> $file
+  sed "s/hostname: .*/hostname: node${node}/" yml/hue.yml >> $file
+  cat yml/hadoop-volumes.yml >> $file
   cat yml/hosts.yml >> $file
 else
   cat yml/hadoop.yml >> $file
@@ -148,6 +153,12 @@ fi
 cat yml/hosts.yml >> $file
 
 
+# Kylo
+if [ $node -eq 1 ]; then
+  sed "s/hostname: .*/hostname: node1/" yml/kylo.yml >> $file
+  cat yml/hosts.yml >> $file
+fi
+
 
 # Jupyter
 ### if [ $node -eq 1 ]; then
@@ -159,6 +170,12 @@ cat yml/hosts.yml >> $file
 # ActiveMQ
 if [ $node -eq 1 ]; then
   sed "s/hostname: .*/hostname: node1/" yml/activemq.yml >> $file
+  cat yml/hosts.yml >> $file
+fi
+
+# Nifi
+if [ $node -eq 1 ]; then
+  sed "s/hostname: .*/hostname: node1/" yml/nifi.yml >> $file
   cat yml/hosts.yml >> $file
 fi
 

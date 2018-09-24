@@ -1,14 +1,10 @@
-  hadoop-hive:
-    container_name: hadoop-hive
-    hostname: node1
-    build: ./hadoop/hive/.
-    image: hadoop-hive
-    network_mode: "host"
-    volumes:
-      - ./hadoop/hive-env.sh:/opt/hive/conf/hive-env.sh
-      - ./hadoop/hive-site.xml:/opt/hive/conf/hive-site.xml
+      - ./hadoop/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+      - ./hadoop/entrypoint.sh:/entrypoint.sh
       - ./hadoop/hadoop-env.sh:/opt/hadoop/etc/hadoop/hadoop-env.sh
       - ./hadoop/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
       - ./hadoop/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
       - ./hadoop/yarn-site.xml:/opt/hadoop/etc/hadoop/yarn-site.xml
       - ./hadoop/mapred-site.xml:/opt/hadoop/etc/hadoop/mapred-site.xml
+      - ./hadoop/hive-env.sh:/opt/hive/conf/hive-env.sh
+      - ./hadoop/hive-site.xml:/opt/hive/conf/hive-site.xml
+      - ./hadoop/httpfs-site.xml:/opt/hadoop/etc/hadoop/httpfs-site.xml

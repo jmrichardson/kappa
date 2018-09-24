@@ -1,9 +1,7 @@
-  hadoop-hue:
-    container_name: hadoop-hue
+  hue:
+    container_name: hue
     hostname: node1
-    image: bde2020/hdfs-filebrowser:3.11
+    build: ./hue/.
+    image: hue
     network_mode: "host"
-    environment:
-      - NAMENODE_HOST=node1
-    depends_on: 
-      - hadoop-namenode
+    volumes:

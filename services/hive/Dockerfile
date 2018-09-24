@@ -1,14 +1,6 @@
 FROM hadoop
 MAINTAINER John Richardson
 
-ENV HIVE_VERSION 3.1.0
-ENV MARIADB_VERSION 10.2.17
-ENV HIVE_HOME /opt/hive
-ENV HIVE_CONF_DIR=/opt/hive/conf
-ENV PATH $HIVE_HOME/bin:$PATH
-ENV CLASSPATH=$CLASSPATH:${HADOOP_HOME}/lib/*:.
-ENV CLASSPATH=$CLASSPATH:${HIVE_HOME}/lib/*:.
-
 WORKDIR /opt
 
 # Hive
@@ -27,6 +19,8 @@ RUN dpkg -i mysql-connector-java_8.0.12-1debian9_all.deb
 RUN ln -s /usr/share/java/mysql-connector-java-8.0.12.jar  $HIVE_HOME/lib/mysql-connector-java.jar
 RUN rm mysql-connector-java_8.0.12-1debian9_all.deb
 
+# CMD hiveserver2 --hiveconf hive.server2.enable.doAs=false --hiveconf hive.root.logger=INFO,console
+CMD hiveserver2 --hiveconf hive.server2.enable.doAs=false
 
 #Spark should be compiled with Hive to be able to use it
 #hive-site.xml should be copied to $SPARK_HOME/conf folder

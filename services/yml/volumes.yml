@@ -17,3 +17,5 @@ volumes:
     driver: local
   mysql:
     driver: local
+  nifi:
+    driver: local

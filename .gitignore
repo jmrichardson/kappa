@@ -79,7 +79,7 @@ logs/*.log
 .idea/
 *.swp
 *.gz
-git.sh
+# git.sh
 .env
 docker-compose.yml
 __pycache__/

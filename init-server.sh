@@ -6,7 +6,7 @@ if ! [ $(id -u) = 0 ]; then
    exit 1
 fi
 
-read -e -p "Setup cron time sync (yes/no): " -i "cron" ans
+read -e -p "Setup cron time sync (yes/no): " -i "yes" cron
 read -e -p "Setup smb share (yes/no): " -i "yes" smb
 read -e -p "Install python dependencies (yes/no): " -i "yes" python
 read -e -p "Reboot after installation (yes/no): " -i "yes" reboot

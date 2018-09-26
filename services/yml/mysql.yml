@@ -10,4 +10,7 @@
       - MYSQL_DATABASE=metastore
     volumes:
       - mysql:/var/lib/mysql
-      - ./hive/hive-schema-3.1.0.mysql.sql:/docker-entrypoint-initdb.d/hive-schema-3.1.0.mysql.sql
+      - ./mysql/hive-schema-3.1.0.mysql.sql:/docker-entrypoint-initdb.d/hive-schema-3.1.0.mysql.sql
+      - ./mysql/users.sql:/docker-entrypoint-initdb.d/users.sql
+      - ./mysql/add_kylo.sql:/docker-entrypoint-initdb.d/add_kylo.sql
+      - ./mysql/kylo-db-update-script.sql:/docker-entrypoint-initdb.d/kylo-db-update-script.sql

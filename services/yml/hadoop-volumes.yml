@@ -1,5 +1,3 @@
-      - ./hadoop/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
-      - ./hadoop/entrypoint.sh:/entrypoint.sh
       - ./hadoop/hadoop-env.sh:/opt/hadoop/etc/hadoop/hadoop-env.sh
       - ./hadoop/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
       - ./hadoop/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml

@@ -145,10 +145,11 @@ fi
 
 # Spark
 sed "s/hostname: .*/hostname: node${node}/" yml/spark.yml >> $file
-if [ $node -ne 1 ]; then
-  echo "    command: sbin/start-slave.sh spark://node1:7077" >> $file
+cat yml/hadoop-volumes.yml >> $file
+if [ $node -eq 1 ]; then
+  echo "    command: /usr/bin/supervisord" >> $file
 else
-  echo "    entrypoint: /conf/entrypoint.sh" >> $file
+  echo "    command: /opt/spark/sbin/start-slave.sh spark://node1:7077" >> $file
 fi
 cat yml/hosts.yml >> $file
 
@@ -156,6 +157,7 @@ cat yml/hosts.yml >> $file
 # Kylo
 if [ $node -eq 1 ]; then
   sed "s/hostname: .*/hostname: node1/" yml/kylo.yml >> $file
+  cat yml/hadoop-volumes.yml >> $file
   cat yml/hosts.yml >> $file
 fi
 

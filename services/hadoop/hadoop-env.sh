@@ -55,7 +55,7 @@
 
 # Location of Hadoop.  By default, Hadoop will attempt to determine
 # this location based upon its execution path.
-export JAVA_HOME=/docker-java-home
+export JAVA_HOME=/usr/lib/jvm/default-java
 
 # Location of Hadoop's configuration information.  i.e., where this
 # file is living. If this is not defined, Hadoop will attempt to

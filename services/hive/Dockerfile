@@ -7,6 +7,7 @@ WORKDIR /opt
 RUN wget https://archive.apache.org/dist/hive/hive-$HIVE_VERSION/apache-hive-$HIVE_VERSION-bin.tar.gz && \
       tar -xzvf apache-hive-$HIVE_VERSION-bin.tar.gz && \
       mv apache-hive-$HIVE_VERSION-bin hive
+RUN rm -f apache-hive-$HIVE_VERSION-bin.tar.gz
 
 # Mariadb
 # RUN wget https://downloads.mariadb.org/interstitial/mariadb-${MARIADB_VERSION}/source/mariadb-${MARIADB_VERSION}.tar.gz && 
@@ -19,8 +20,8 @@ RUN dpkg -i mysql-connector-java_8.0.12-1debian9_all.deb
 RUN ln -s /usr/share/java/mysql-connector-java-8.0.12.jar  $HIVE_HOME/lib/mysql-connector-java.jar
 RUN rm mysql-connector-java_8.0.12-1debian9_all.deb
 
-# CMD hiveserver2 --hiveconf hive.server2.enable.doAs=false --hiveconf hive.root.logger=INFO,console
-CMD hiveserver2 --hiveconf hive.server2.enable.doAs=false
+CMD hiveserver2 --hiveconf hive.server2.enable.doAs=false --hiveconf hive.root.logger=INFO,console
+# CMD hiveserver2 --hiveconf hive.server2.enable.doAs=false
 
 #Spark should be compiled with Hive to be able to use it
 #hive-site.xml should be copied to $SPARK_HOME/conf folder

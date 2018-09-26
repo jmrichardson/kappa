@@ -5,8 +5,7 @@
     image: spark
     network_mode: "host"
     environment:
-      - SPARK_CONF_DIR=/conf
       - SPARK_NO_DAEMONIZE=true
     volumes:
-      - ./spark/conf:/conf
-      - /nfs:/nfs
+      - ./spark/slaves:/opt/spark/conf/slaves
+      - ./spark/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf

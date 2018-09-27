@@ -27,7 +27,7 @@ RUN $SETUP_DIR/java/change-kylo-java-home.sh $JAVA_HOME $KYLO_HOME
 RUN $SETUP_DIR/java/install-java-crypt-ext.sh $JAVA_HOME
  
 # Create elastic indexes
-RUN /opt/kylo/bin/create-kylo-indexes-es.sh node1 9200 1 1
+# RUN /opt/kylo/bin/create-kylo-indexes-es.sh node1 9200 1 1
 
 # ActiveMQ
 RUN $SETUP_DIR/activemq/install-activemq.sh /opt/activemq activemq activemq $JAVA_HOME

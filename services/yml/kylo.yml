@@ -4,8 +4,14 @@
     build: ./kylo/.
     image: kylo
     network_mode: "host"
+    depends_on:
+      - elasticsearch
+      - mysql
+      - hadoop
+      - hive
+      - spark
     volumes:
-      - ./kylo/user.properties:/opt/kylo/user.properties
+      - ./kylo/users.properties:/opt/kylo/users.properties
       - ./kylo/kylo-ui/application.properties:/opt/kylo/kylo-ui/conf/application.properties
       - ./kylo/kylo-services/application.properties:/opt/kylo/kylo-services/conf/application.properties
       - ./kylo/kylo-services/spark.properties:/opt/kylo/kylo-services/conf/spark.properties

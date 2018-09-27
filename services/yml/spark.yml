@@ -4,6 +4,9 @@
     build: spark/.
     image: spark
     network_mode: "host"
+    depends_on:
+      - hadoop
+      - hive
     environment:
       - SPARK_NO_DAEMONIZE=true
     volumes:

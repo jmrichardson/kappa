@@ -4,4 +4,6 @@
     build: ./hive/.
     image: hive
     network_mode: "host"
+    depends_on:
+      - hadoop
     volumes:

@@ -2,7 +2,7 @@
     container_name: kibana
     hostname: node1
     network_mode: "host"
-    image: "docker.elastic.co/kibana/kibana:6.4.0"
+    image: "docker.elastic.co/kibana/kibana:5.6.12"
     environment:
       - ELASTICSEARCH_URL=http://localhost:9200
     depends_on:

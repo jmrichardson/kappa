@@ -129,12 +129,9 @@ if [ $node -eq 1 ]; then
   cat yml/hadoop.yml >> $file
   cat yml/hadoop-volumes.yml >> $file
   cat yml/hosts.yml >> $file
-  # sed "s/hostname: .*/hostname: node${node}/" yml/hue.yml >> $file
-  # cat yml/hadoop-volumes.yml >> $file
-  # cat yml/hosts.yml >> $file
 else
-  cat yml/hadoop.yml >> $file
-  sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-datanode.yml >> $file
+  sed "s/supervisord.conf/supervisord-slave.conf/" yml/hadoop.yml >> $file
+  cat yml/hadoop-volumes.yml >> $file
   cat yml/hosts.yml >> $file
 fi
 

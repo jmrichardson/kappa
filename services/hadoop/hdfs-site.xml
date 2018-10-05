@@ -37,4 +37,8 @@
     <name>dfs.webhdfs.enabled</name>
     <value>true</value>
   </property>
+  <property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://node1:8020</value>
+  </property>
 </configuration>

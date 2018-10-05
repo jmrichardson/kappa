@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 MAINTAINER John Richardson
 
-RUN apt update && apt upgrade
+RUN apt update -y && apt upgrade -y
 RUN apt install -y curl unzip supervisor wget vim git
 RUN apt install -y openjdk-8-jdk
 

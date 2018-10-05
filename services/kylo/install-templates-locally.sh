@@ -29,7 +29,7 @@ curl -i -X POST -u dladmin:thinkbig -H "Content-Type: multipart/form-data" \
 
 curl -i -X POST -u dladmin:thinkbig -H "Content-Type: multipart/form-data" \
     -F "file=@/opt/kylo/setup/data/templates/nifi-1.0/data_confidence_invalid_records.zip" \
-    -F "overwrite=true" \
+    -F "overwrite=false" \
     -F "createReusableFlow=false" \
     -F "importConnectingReusableFlow=NOT_SET" \
     http://localhost:8400/proxy/v1/feedmgr/admin/import-template

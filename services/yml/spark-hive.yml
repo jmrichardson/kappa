@@ -1,0 +1,14 @@
+  spark-hive:
+    container_name: spark-hive
+    hostname: node1
+    build: spark-hive/.
+    image: spark-hive
+    network_mode: "host"
+    depends_on:
+      - mysql
+      - hadoop
+    environment:
+      - SPARK_NO_DAEMONIZE=true
+    volumes:
+      - ./spark-hive/slaves:/opt/spark/conf/slaves
+      - ./spark-hive/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf

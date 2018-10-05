@@ -9,8 +9,6 @@
       - elasticsearch
       - mysql
       - hadoop
-      - hive
-      - spark
     volumes:
       - ./kylo/entrypoint.sh:/entrypoint.sh
       - ./kylo/install-templates-locally.sh:/opt/kylo/setup/data/install-templates-locally.sh

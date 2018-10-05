@@ -15,4 +15,8 @@
        <name>yarn.resourcemanager.address</name>
        <value>node1:8032</value>
     </property>
+   <property>
+      <name>yarn.resourcemanager.scheduler.class</name>
+      <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler</value>
+   </property>
 </configuration>

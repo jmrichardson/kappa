@@ -129,12 +129,9 @@ if [ $node -eq 1 ]; then
   cat yml/hadoop.yml >> $file
   cat yml/hadoop-volumes.yml >> $file
   cat yml/hosts.yml >> $file
-  sed "s/hostname: .*/hostname: node${node}/" yml/hive.yml >> $file
-  cat yml/hadoop-volumes.yml >> $file
-  cat yml/hosts.yml >> $file
-  sed "s/hostname: .*/hostname: node${node}/" yml/hue.yml >> $file
-  cat yml/hadoop-volumes.yml >> $file
-  cat yml/hosts.yml >> $file
+  # sed "s/hostname: .*/hostname: node${node}/" yml/hue.yml >> $file
+  # cat yml/hadoop-volumes.yml >> $file
+  # cat yml/hosts.yml >> $file
 else
   cat yml/hadoop.yml >> $file
   sed "s/hostname: .*/hostname: node${node}/" yml/hadoop-datanode.yml >> $file
@@ -142,9 +139,8 @@ else
 fi
 
 
-
-# Spark
-sed "s/hostname: .*/hostname: node${node}/" yml/spark.yml >> $file
+# Spark-hive
+sed "s/hostname: .*/hostname: node${node}/" yml/spark-hive.yml >> $file
 cat yml/hadoop-volumes.yml >> $file
 if [ $node -eq 1 ]; then
   echo "    command: /usr/bin/supervisord" >> $file

@@ -2,7 +2,8 @@
       - ./hadoop/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
       - ./hadoop/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
       - ./hadoop/yarn-site.xml:/opt/hadoop/etc/hadoop/yarn-site.xml
-      - ./hadoop/mapred-site.xml:/opt/hadoop/etc/hadoop/mapred-site.xml
-      - ./hadoop/hive-env.sh:/opt/hive/conf/hive-env.sh
-      - ./hadoop/hive-site.xml:/opt/hive/conf/hive-site.xml
       - ./hadoop/httpfs-site.xml:/opt/hadoop/etc/hadoop/httpfs-site.xml
+      - ./hadoop/mapred-site.xml:/opt/hadoop/etc/hadoop/mapred-site.xml
+      - ./spark-hive/hive-env.sh:/opt/hive/conf/hive-env.sh
+      - ./spark-hive/hive-site.xml:/opt/hive/conf/hive-site.xml
+      - ./spark-hive/spark-env.sh:/opt/spark/conf/spark-env.sh

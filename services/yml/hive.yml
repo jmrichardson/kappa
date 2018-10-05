@@ -1,9 +1,0 @@
-  hive:
-    container_name: hive
-    hostname: node1
-    build: ./hive/.
-    image: hive
-    network_mode: "host"
-    depends_on:
-      - hadoop
-    volumes:

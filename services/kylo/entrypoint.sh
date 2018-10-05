@@ -32,11 +32,15 @@ tail -f /var/log/kylo-services/kylo-services.log | while read line; do
   if [ $? -eq 0 ]; then
     echo $line
     echo "Importing templates ..."
-    /opt/kylo/setup/data/install-templates-locally.sh
+    /opt/kylo/setup/data/install-templates-locally.sh > /dev/null
     echo "Finished importing templates"
+    break
   else
     echo $line
   fi
 done
+
+# New tail of log messages after importing templates
+tail -c 0 -f /var/log/kylo-services/kylo-services.log
 
 

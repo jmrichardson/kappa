@@ -2,9 +2,10 @@ FROM ubuntu:16.04
 MAINTAINER John Richardson
 
 RUN apt update && apt upgrade
-RUN apt-get install -y curl unzip vim supervisor wget default-jre
+RUN apt install -y curl unzip supervisor wget vim git
+RUN apt install -y openjdk-8-jdk
 
-ENV JAVA_HOME /usr/lib/jvm/default-java
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
 # Hadoop
 ENV HADOOP_VERSION 3.1.1
@@ -20,13 +21,7 @@ ENV HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
 ENV PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 ENV JAVA_LIBRARY_PATH=${HADOOP_HOME}/lib/native/
 ENV LD_LIBRARY_PATH=${HADOOP_HOME}/lib/native
-ENV HIVE_VERSION 3.1.0
-ENV MARIADB_VERSION 10.2.17
-ENV HIVE_HOME /opt/hive
-ENV HIVE_CONF_DIR=/opt/hive/conf
-ENV PATH $HIVE_HOME/bin:$PATH
 ENV CLASSPATH=$CLASSPATH:${HADOOP_HOME}/lib/*:.
-ENV CLASSPATH=$CLASSPATH:${HIVE_HOME}/lib/*:.
 
 RUN curl -sL --retry 3 \
   "http://archive.apache.org/dist/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz" \
